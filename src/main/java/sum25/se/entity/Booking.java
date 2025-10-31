@@ -14,7 +14,7 @@ import java.util.List;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int bookingId;
+    Integer bookingId;
     String bookingDate;
     String status;
     int totalPrice;

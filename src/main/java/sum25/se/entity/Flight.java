@@ -15,7 +15,7 @@ import java.util.List;
 public class Flight {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int flightId;
+    private Integer flightId;
     private String planeModel;
     private LocalDateTime departureTime;
     private int duration;

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class FlightSchedule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int scheduleId;
+    private Integer scheduleId;
     private int seatNumber;
     private String seatClass;
     private double price;

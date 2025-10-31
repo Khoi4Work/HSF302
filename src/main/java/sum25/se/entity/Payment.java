@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int paymentId;
+    private Integer paymentId;
     LocalDateTime paymentDate;
     private double amount;
     private String paymentMethod;

@@ -15,7 +15,7 @@ import java.util.List;
 public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int userId;
+    Integer userId;
 
     String fullName;
     String email;
@@ -23,9 +23,7 @@ public class Users {
     String phone;
     String passportNumber;
     Date dateOfBirth;
-    @ManyToOne
-    @JoinColumn(name = "roleId")
-    UserRole role;
+    RoleUsers roleUses = RoleUsers.USER;
     @OneToMany(mappedBy = "users")
     List<Booking> bookings;
 

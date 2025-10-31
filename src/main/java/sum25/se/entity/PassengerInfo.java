@@ -14,7 +14,7 @@ import java.util.Date;
 public class PassengerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int passengerId;
+    Integer passengerId;
     String gender;
     String fullName;
     String passportNumber;

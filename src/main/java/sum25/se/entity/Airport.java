@@ -14,7 +14,7 @@ import java.util.List;
 public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int airportId;
+    private Integer airportId;
     private String airportName;
     private String code;
     private String location;
