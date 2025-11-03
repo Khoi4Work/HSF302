@@ -13,12 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Booking {
 
- 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer bookingId;
     String bookingDate;
-    String status;
+    @Enumerated(EnumType.STRING)
+    StatusBooking status =StatusBooking.PENDING;
     int totalPrice;
     String seatClass;
 
