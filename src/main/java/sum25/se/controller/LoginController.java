@@ -20,7 +20,7 @@ public class LoginController {
         return "main";
     }
 
-    @GetMapping("/login")
+    @GetMapping({"/login", "/"})
     public String showLogin(){
         return "login";
     }
