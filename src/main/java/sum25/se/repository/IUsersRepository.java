@@ -5,4 +5,6 @@ import sum25.se.entity.Users;
 
 public interface IUsersRepository extends JpaRepository<Users,Integer> {
     Users getUsersByUserId(Integer userId);
+
+    Users getUsersByEmailAndPassword(String email, String password);
 }

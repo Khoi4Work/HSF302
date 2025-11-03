@@ -47,4 +47,9 @@ public class UsersServiceImpl implements IUsersService {
     public void deleteUser(Integer id) {
         iUsersRepository.deleteById(id);
     }
+
+    @Override
+    public Users login(String email, String password) {
+        return iUsersRepository.getUsersByEmailAndPassword(email, password);
+    }
 }

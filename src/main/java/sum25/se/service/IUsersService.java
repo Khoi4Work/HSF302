@@ -11,4 +11,6 @@ public interface IUsersService {
     Users createUser(Users user);
     Users updateUser(Integer id, Users updatedUser);
     void deleteUser(Integer id);
+
+    Users login(String email, String password);
 }
