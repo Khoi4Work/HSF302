@@ -91,7 +91,7 @@
     <h2>🛫 Create Your Account</h2>
 
     <!-- Form đăng ký -->
-    <form th:action="@{/register}" th:object="${user}" method="post">
+    <form th:action="@{/register-success}" th:object="${user}" method="post">
 
         <label for="fullName">Full Name</label>
         <input type="text" id="fullName" th:field="*{fullName}" placeholder="Enter your full name" required>

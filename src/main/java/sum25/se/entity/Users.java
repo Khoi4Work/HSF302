@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +23,8 @@ public class Users {
     String password;
     String phone;
     String passportNumber;
-    Date dateOfBirth;
+    LocalDate dateOfBirth;
+    @Enumerated(EnumType.STRING)
     RoleUsers roleUses = RoleUsers.USER;
     @OneToMany(mappedBy = "users")
     List<Booking> bookings;

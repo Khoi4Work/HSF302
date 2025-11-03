@@ -12,6 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Booking {
+
+ 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer bookingId;
@@ -19,6 +21,8 @@ public class Booking {
     String status;
     int totalPrice;
     String seatClass;
+
+
     @ManyToOne
     @JoinColumn(name = "userId")
     Users users;
