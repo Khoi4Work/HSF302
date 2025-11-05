@@ -12,21 +12,24 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Flight {
+public class Plane {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "planeId")
     private Integer flightId;
     private String planeModel;
     private LocalDateTime departureTime;
     private int duration;
     // save duration in minutes
     String status;
-    @OneToMany(mappedBy = "flight")
+    @OneToMany(mappedBy = "plane")
     private List<Booking> bookings;
     @ManyToOne
     @JoinColumn(name = "airportId")
     private Airport airport;
-    @OneToMany(mappedBy = "flight")
-    private List<FlightSchedule> flightSchedules;
+    //    @OneToMany(mappedBy = "flight")
+//    private List<FlightSchedule> flightSchedules;
+    @OneToMany(mappedBy = "plane")
+    List<FlightSchedule_Plane> flightSchedulePlane;
 
 }

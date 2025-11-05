@@ -3,7 +3,7 @@ package sum25.se.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import sum25.se.entity.Booking;
-import sum25.se.entity.Flight;
+import sum25.se.entity.Plane;
 import sum25.se.entity.PassengerInfo;
 import sum25.se.entity.Users;
 import sum25.se.repository.IBookingRepository;
@@ -42,7 +42,7 @@ public class BookingServiceImpl implements IBookingService {
         existing.setTotalPrice(booking.getTotalPrice());
         existing.setSeatClass(booking.getSeatClass());
         existing.setUsers(booking.getUsers());
-        existing.setFlight(booking.getFlight());
+//        existing.setFlight(booking.getPlane());
         return iBookingRepository.save(existing);
     }
 
@@ -52,10 +52,10 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking createBooking(Users user, Flight flight, List<PassengerInfo> passengers, String seatClass, int totalPrice) {
+    public Booking createBooking(Users user, Plane plane, List<PassengerInfo> passengers, String seatClass, int totalPrice) {
         Booking booking = new Booking();
         booking.setUsers(user);
-        booking.setFlight(flight);
+//        booking.setFlight(plane);
         booking.setSeatClass(seatClass);
         booking.setBookingDate(LocalDateTime.now().toString());
         booking.setTotalPrice(totalPrice);

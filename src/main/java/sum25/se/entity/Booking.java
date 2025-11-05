@@ -33,6 +33,6 @@ public class Booking {
     List<Payment> payments;
     @ManyToOne
     @JoinColumn(name = "flightId")
-    Flight flight;
+    Plane plane;
 
 }

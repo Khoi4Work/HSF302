@@ -36,7 +36,7 @@ public class FlightScheduleServiceImpl implements IFlightScheduleService {
         existing.setSeatClass(schedule.getSeatClass());
         existing.setPrice(schedule.getPrice());
         existing.setStatus(schedule.getStatus());
-        existing.setFlight(schedule.getFlight());
+//        existing.setFlightSchedulePlane(schedule.getFlight());
 
         return iFlightScheduleRepository.save(existing);
     }
@@ -44,5 +44,10 @@ public class FlightScheduleServiceImpl implements IFlightScheduleService {
     @Override
     public void deleteSchedule(Integer id) {
         iFlightScheduleRepository.deleteById(id);
+    }
+
+    @Override
+    public FlightSchedule addFlightSchedulte(FlightSchedule flightSchedule) {
+        return iFlightScheduleRepository.save(flightSchedule);
     }
 }

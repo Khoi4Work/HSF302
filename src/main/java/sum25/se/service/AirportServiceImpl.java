@@ -38,9 +38,25 @@ public class AirportServiceImpl implements IAirportService {
         return iAirportRepository.save(existing);
     }
 
+
     @Override
     public void deleteAirport(Integer id) {
         iAirportRepository.deleteById(id);
+    }
+
+    @Override
+    public Airport getAirpotByAirportName(String airportName) {
+        return iAirportRepository.findByAirportName(airportName);
+    }
+
+    @Override
+    public Airport addAirport(Airport airport) {
+        return iAirportRepository.save(airport);
+    }
+
+    @Override
+    public Airport getAiportByCode(String code) {
+        return iAirportRepository.findByCode(code);
     }
 
 

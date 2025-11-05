@@ -19,6 +19,6 @@ public class Airport {
     private String code;
     private String location;
     @OneToMany(mappedBy = "airport")
-    private List<Flight> flights;
+    private List<Plane> planes;
 
 }

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh sách Lịch bay</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root{
+            --indigo-400:#818cf8;
+            --indigo-500:#667eea;
+            --purple-500:#764ba2;
+            --bg:#0f172a;
+            --card:#ffffff;
+            --text:#1f2937;
+            --muted:#6b7280;
+            --border:#e5e7eb;
+            --ring: rgba(102,126,234,.25);
+            --shadow: 0 10px 30px rgba(0,0,0,.15);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background:
+                    radial-gradient(1000px 600px at 80% -10%, rgba(129,140,248,.15), transparent 60%),
+                    linear-gradient(135deg, var(--indigo-500) 0%, var(--purple-500) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--card);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            padding: 28px 28px 32px;
+            border: 1px solid rgba(255,255,255,.4);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .heading {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .header h1 {
+            font-size: 1.8em;
+            color: #111827;
+            letter-spacing: -0.01em;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 0.98em;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            border: 1px solid transparent;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: transform .12s ease, box-shadow .2s ease, background .2s, border-color .2s;
+            user-select: none;
+        }
+        .btn:active { transform: translateY(1px); }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--indigo-400), var(--indigo-500));
+            color: white;
+            box-shadow: 0 10px 22px rgba(102,126,234,.28);
+        }
+        .btn-primary:hover { box-shadow: 0 12px 28px rgba(102,126,234,.36); }
+
+        .btn-ghost {
+            background: #f8fafc;
+            color: #111827;
+            border-color: var(--border);
+        }
+        .btn-ghost:hover { background: #f1f5f9; }
+
+        .table-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            font-size: 0.95em;
+        }
+
+        thead th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background: linear-gradient(135deg, var(--indigo-500) 0%, var(--purple-500) 100%);
+            color: white;
+        }
+
+        th {
+            padding: 14px 14px;
+            text-align: left;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(255,255,255,.2);
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #eef2f7;
+            transition: background-color .2s ease, box-shadow .2s ease, transform .12s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f9ff;
+            box-shadow: 0 1px 0 rgba(102,126,234,0.08) inset;
+        }
+
+        td {
+            padding: 14px 14px;
+            color: #374151;
+            vertical-align: middle;
+        }
+
+        /* Căn phải các cột số */
+        td.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+        /* Làm nổi bật Loại ghế */
+        td:nth-child(9) {
+            font-weight: 700;
+            color: var(--purple-500);
+        }
+
+        /* Badge trạng thái */
+        .status-badge {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 0.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+        }
+
+        .status-scheduled {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border-color: rgba(46,125,50,.25);
+        }
+
+        .status-ongoing {
+            background-color: #fff3e0;
+            color: #b45309;
+            border-color: rgba(180,83,9,.25);
+        }
+
+        .status-completed {
+            background-color: #eef2ff;
+            color: #3730a3;
+            border-color: rgba(55,48,163,.25);
+        }
+
+        .status-cancelled {
+            background-color: #ffebee;
+            color: #c62828;
+            border-color: rgba(198,40,40,.25);
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6b7280;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            opacity: 0.6;
+        }
+
+        /* Thanh công cụ (tùy chọn) */
+        .toolbar {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            margin: 14px 0 10px;
+            flex-wrap: wrap;
+        }
+
+        .search {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 8px 12px;
+            min-width: 240px;
+            transition: box-shadow .2s, border-color .2s, background .2s;
+        }
+        .search:focus-within {
+            border-color: var(--indigo-500);
+            box-shadow: 0 0 0 4px var(--ring);
+            background: #fff;
+        }
+        .search input{
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            color: #111827;
+        }
+        .search input::placeholder { color: #9ca3af; }
+
+        /* Responsive */
+        @media (max-width: 1024px){
+            .header { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .actions { width: 100%; justify-content: flex-start; }
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 20px; border-radius: 12px; }
+            th, td { padding: 12px 10px; font-size: 0.9em; }
+            .header h1 { font-size: 1.4em; }
+            .toolbar { gap: 8px; }
+        }
+
+        @media (max-width: 560px) {
+            body { padding: 12px; }
+            .container { padding: 16px; }
+            table { font-size: 0.88em; }
+            th, td { padding: 10px 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="heading">
+            <h1>✈️ Danh sách Lịch bay</h1>
+            <p>Tìm và đặt vé máy bay của bạn</p>
+        </div>
+        <div class="actions">
+            <button class="btn btn-ghost" type="button">Bộ lọc</button>
+            <button class="btn btn-primary" type="button">🔄 Làm mới</button>
+        </div>
+    </div>
+
+    <div class="toolbar">
+        <div class="search">
+            <span>🔎</span>
+            <input type="text" placeholder="Tìm theo sân bay, mã chuyến, loại ghế...">
+        </div>
+        <div style="display:flex; gap:8px;">
+            <span style="color:#6b7280; font-size:.92em">Tổng lịch bay: <strong th:text="${flights != null ? flights.size() : 0}">0</strong></span>
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mẫu máy bay</th>
+                    <th>Sân bay đi</th>
+                    <th>Điểm cất cánh</th>
+                    <th>Điểm hạ cánh</th>
+                    <th>Ngày cất cánh</th>
+                    <th>Giờ cất cánh</th>
+                    <th>Ngày hạ cánh</th>
+                    <th>Giờ hạ cánh</th>
+                    <th>Loại ghế</th>
+                    <th>Số ghế</th>
+                    <th>Giá vé</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="flight : ${flights}">
+                    <td th:text="${flight.plane.planeModel}">Airbus A321</td>
+                    <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
+                    <td th:text="${flight.takeOff}">SGN</td>
+                    <td th:text="${flight.land}">HAN</td>
+                    <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
+                    <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
+                    <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
+                    <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
+                    <td class="num" th:text="${#numbers.formatDecimal(flight.flightSchedule.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">1,500,000 VND</td>
+                    <td>
+                        <span th:switch="${flight.plane.status}">
+                            <span th:case="'Scheduled'" class="status-badge status-scheduled" th:text="${flight.plane.status}">Scheduled</span>
+                            <span th:case="'Ongoing'" class="status-badge status-ongoing" th:text="${flight.plane.status}">Ongoing</span>
+                            <span th:case="'Completed'" class="status-badge status-completed" th:text="${flight.plane.status}">Completed</span>
+                            <span th:case="*" class="status-badge status-cancelled" th:text="${flight.plane.status}">Cancelled</span>
+                        </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${flights == null or flights.isEmpty()}">
+                    <td colspan="12">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Không có lịch bay nào.</p>
+                            <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

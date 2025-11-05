@@ -2,7 +2,8 @@ package sum25.se.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sum25.se.entity.Flight;
+import sum25.se.entity.Plane;
+import sum25.se.entity.Plane;
 import sum25.se.repository.IFlightRepository;
 
 import java.util.List;
@@ -15,29 +16,29 @@ public class FlightServiceImpl implements IFlightService {
 
 
     @Override
-    public List<Flight> getAllFlights() {
+    public List<Plane> getAllFlights() {
         return iFlightRepository.findAll();
     }
 
     @Override
-    public Flight getFlightById(Integer id) {
+    public Plane getFlightById(Integer id) {
         return iFlightRepository.getFlightByFlightId(id);
     }
 
     @Override
-    public Flight createFlight(Flight flight) {
-        return iFlightRepository.save(flight);
+    public Plane createFlight(Plane plane) {
+        return iFlightRepository.save(plane);
     }
 
     @Override
-    public Flight updateFlight(Integer id, Flight flight) {
-        Flight existing = getFlightById(id);
+    public Plane updateFlight(Integer id, Plane plane) {
+        Plane existing = getFlightById(id);
 
-        existing.setPlaneModel(flight.getPlaneModel());
-        existing.setDepartureTime(flight.getDepartureTime());
-        existing.setDuration(flight.getDuration());
-        existing.setStatus(flight.getStatus());
-        existing.setAirport(flight.getAirport());
+        existing.setPlaneModel(plane.getPlaneModel());
+        existing.setDepartureTime(plane.getDepartureTime());
+        existing.setDuration(plane.getDuration());
+        existing.setStatus(plane.getStatus());
+        existing.setAirport(plane.getAirport());
 
         return iFlightRepository.save(existing);
     }
@@ -45,5 +46,10 @@ public class FlightServiceImpl implements IFlightService {
     @Override
     public void deleteFlight(Integer id) {
         iFlightRepository.deleteById(id);
+    }
+
+    @Override
+    public Plane addFlight(Plane plane) {
+        return iFlightRepository.save(plane);
     }
 }
