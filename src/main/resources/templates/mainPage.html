@@ -15,13 +15,46 @@
     <a th:href="@{/booking/create}">Đặt vé</a>
     <a th:href="@{/booking/list}">Danh sách vé</a>
     <a th:href="@{/flights}">Tra cứu chuyến bay</a>
-    <a th:href="@{/logout}">Đăng xuất</a>
 </nav>
 
 <main>
+    <div class="search-section">
+        <form th:action="@{/flight/search}" method="get" class="search-form">
+            <div class="form-group">
+                <label for="departure">Điểm đi:</label>
+                <input type="text" id="departure" name="departure"
+                       th:value="${departure}" placeholder="Ví dụ: SGN" required>
+            </div>
+
+            <div class="form-group">
+                <label for="destination">Điểm đến:</label>
+                <input type="text" id="destination" name="destination"
+                       th:value="${destination}" placeholder="Ví dụ: HAN" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Ngày cất cánh:</label>
+                <input type="date" id="date" name="date"
+                       th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="seatClass">Hạng ghế:</label>
+                <select id="seatClass" name="seatClass">
+                    <option value="" th:selected="${seatClass == null or seatClass == ''}">Tất cả</option>
+                    <option value="Economy" th:selected="${seatClass == 'Economy'}">Economy</option>
+                    <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
+                    <option value="First" th:selected="${seatClass == 'First'}">First Class</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
+        </form>
+    </div>
+    <!--  DANH SÁCH CHUYẾN BAY -->
     <div class="header">
         <div class="heading">
-            <h1>✈️ Danh sách Lịch bay</h1>
+            <h1>️ Danh sách Lịch bay</h1>
             <p>Tìm và đặt vé máy bay của bạn</p>
         </div>
         <div class="actions">

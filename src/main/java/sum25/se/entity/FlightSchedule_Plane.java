@@ -28,6 +28,7 @@ public class FlightSchedule_Plane {
     private String land;
     private LocalDateTime takeOffTime;
     private LocalDateTime landTime;
+
     public LocalDate getTakeOffDate() {
         return this.takeOffTime != null ? this.takeOffTime.toLocalDate() : null;
     }
