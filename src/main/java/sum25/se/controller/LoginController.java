@@ -22,12 +22,12 @@ public class LoginController {
     @Autowired
     private IFlightSchedulePlaneService iFlightSchedulePlaneService;
 
-    @GetMapping()
+    @GetMapping("/")
     public String mainPage(){
         return "main";
     }
 
-    @GetMapping({"/login", "/"})
+    @GetMapping("/login")
     public String showLogin(){
         return "login";
     }
@@ -78,5 +78,9 @@ public class LoginController {
         return "redirect:/mainPage";
     }
 
-
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
+    }
 }
