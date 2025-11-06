@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sum25.se.entity.Users;
@@ -39,6 +40,22 @@ public class LoginController {
         return "redirect:/login";
     }
 
+    @GetMapping("/main")
+    public String showMain() {
+        return "main";
+    }
+
+    @GetMapping("/error")
+    public String showError() {
+        return "error";
+    }
+
+    @GetMapping("/mainPage")
+    public String showMainPage(Model model, HttpSession session) {
+        Users user = (Users) session.getAttribute("LoggedIn");
+        model.addAttribute("user", user);
+        return "mainPage";
+    }
 
     @PostMapping("/process")
     public String processLogin(HttpSession session, @RequestParam String email, @RequestParam String password) {
@@ -48,16 +65,8 @@ public class LoginController {
         }
         System.out.println(email+"-"+password);
         session.setAttribute("LoggedIn", user);
-        return "redirect:/main";
+        return "redirect:/mainPage";
     }
 
-    @GetMapping("/main")
-    public String main() {
-        return "main";
-    }
 
-    @GetMapping("/error")
-    public String showError() {
-        return "error";
-    }
 }

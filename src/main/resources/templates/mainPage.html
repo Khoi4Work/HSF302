@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SkyTicket - Trang Chính</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #004aad;
+            color: white;
+            text-align: center;
+            padding: 1.2rem;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            background-color: #f0f0f0;
+            padding: 1rem;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #004aad;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        main {
+            text-align: center;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            color: #004aad;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            background-color: #004aad;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #00337f;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #f0f0f0;
+            color: #666;
+            margin-top: 40px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 320px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.4s;
+        }
+
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+    </style>
+</head>
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener('DOMContentLoaded', function () {
+        let modal = document.getElementById('welcomeModal');
+        if (modal) {
+            modal.style.display = 'block';
+            // Tự đóng sau 3 giây (nếu muốn)
+            setTimeout(() => {
+                modal.style.display = 'none';
+            }, 3000);
+        }
+    });
+
+    function closeModal() {
+        document.getElementById('welcomeModal').style.display = 'none';
+    }
+
+    /*]]>*/
+</script>
+
+<body>
+
+<header>
+    <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
+</header>
+
+<nav>
+    <a th:href="@{/booking/create}">Đặt vé</a>
+    <a th:href="@{/booking/list}">Danh sách vé</a>
+    <a th:href="@{/flights}">Tra cứu chuyến bay</a>
+</nav>
+
+<main>
+    <h1>Chào mừng đến với SkyTicket!</h1>
+    <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
+
+    <a th:href="@{/booking/create}" class="btn">Bắt đầu đặt vé ngay</a>
+</main>
+<div id="welcomeModal" class="modal" th:if="${user != null}">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Xin chào, <span th:text="${user.fullName}">Người dùng</span>!</h2>
+        <p>Chúc bạn có trải nghiệm đặt vé tuyệt vời cùng SkyTicket!</p>
+    </div>
+</div>
+
+
+<footer>
+    <p>© 2025 SkyTicket. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
