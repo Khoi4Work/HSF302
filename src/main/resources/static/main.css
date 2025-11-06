@@ -1,0 +1,221 @@
+:root {
+    --primary: #004aad;
+    --secondary: #66a6ff;
+    --light: #f8faff;
+    --border: #e0e6f0;
+    --text-dark: #222;
+    --text-muted: #555;
+    --radius: 12px;
+}
+
+/* Reset cơ bản */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #dfe9f3 0%, #ffffff 100%);
+    color: var(--text-dark);
+    line-height: 1.6;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+}
+
+header h2 {
+    font-size: 1.8rem;
+    letter-spacing: 0.5px;
+}
+
+/* NAVIGATION */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    background: white;
+    border-bottom: 1px solid var(--border);
+    padding: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+nav a {
+    text-decoration: none;
+    color: var(--primary);
+    font-weight: 600;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: all 0.25s ease;
+}
+
+nav a:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* MAIN */
+main {
+    max-width: 1200px;
+    margin: 40px auto;
+    background: white;
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+h1 {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+p {
+    color: var(--text-muted);
+}
+
+/* BUTTONS */
+.btn {
+    display: inline-block;
+    margin-top: 24px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+}
+
+/* TABLE CARD */
+.table-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95em;
+}
+
+thead {
+    background: var(--primary);
+    color: white;
+}
+
+th, td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:hover {
+    background-color: #f4f8ff;
+}
+
+td.num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* STATUS BADGES */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.8em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+/* Nút đặt vé */
+button {
+    background: linear-gradient(135deg, #007bff, #00b4d8);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 8px rgba(0, 123, 255, 0.25);
+}
+
+button:hover {
+    background: linear-gradient(135deg, #0066cc, #0096c7);
+    box-shadow: 0 5px 14px rgba(0, 123, 255, 0.35);
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(0, 123, 255, 0.25);
+}
+
+button:disabled {
+    background: #ccc;
+    color: #666;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+
+.status-scheduled { background: #e3f2fd; color: #1976d2; }
+.status-ongoing { background: #fff3cd; color: #856404; }
+.status-completed { background: #e8f5e9; color: #2e7d32; }
+.status-cancelled { background: #ffebee; color: #c62828; }
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #6b7280;
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 40px;
+    background: #f9fafc;
+    color: #888;
+    border-top: 1px solid #e5e7eb;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+    main { padding: 20px; }
+    th, td { padding: 10px; font-size: 0.9em; }
+    nav { flex-wrap: wrap; gap: 10px; }
+}
+body {
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}

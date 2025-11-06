@@ -3,72 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>SkyTicket - Trang Chính</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #89f7fe, #66a6ff);
-            color: #333;
-            margin: 0;
-            padding: 0;
-        }
-
-        header {
-            background-color: #004aad;
-            color: white;
-            text-align: center;
-            padding: 1.2rem;
-        }
-
-        nav {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            background-color: #f0f0f0;
-            padding: 1rem;
-        }
-
-        nav a {
-            text-decoration: none;
-            color: #004aad;
-            font-weight: bold;
-        }
-
-        nav a:hover {
-            text-decoration: underline;
-        }
-
-        main {
-            text-align: center;
-            padding: 40px;
-        }
-
-        h1 {
-            font-size: 2.2rem;
-            color: #004aad;
-        }
-
-        .btn {
-            display: inline-block;
-            margin-top: 20px;
-            background-color: #004aad;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 6px;
-            text-decoration: none;
-        }
-
-        .btn:hover {
-            background-color: #00337f;
-        }
-
-        footer {
-            text-align: center;
-            padding: 1rem;
-            background-color: #f0f0f0;
-            color: #666;
-            margin-top: 40px;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/main.css}">
 </head>
 <body>
 
@@ -85,6 +20,80 @@
 </nav>
 
 <main>
+    <div class="header">
+        <div class="heading">
+            <h1>✈️ Danh sách Lịch bay</h1>
+            <p>Tìm và đặt vé máy bay của bạn</p>
+        </div>
+        <div class="actions">
+            <button class="btn btn-ghost" type="button">Bộ lọc</button>
+            <button class="btn btn-primary" type="button">🔄 Làm mới</button>
+        </div>
+    </div>
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Mẫu máy bay</th>
+                    <th>Sân bay đi</th>
+                    <th>Điểm cất cánh</th>
+                    <th>Điểm hạ cánh</th>
+                    <th>Ngày cất cánh</th>
+                    <th>Giờ cất cánh</th>
+                    <th>Ngày hạ cánh</th>
+                    <th>Giờ hạ cánh</th>
+                    <th>Loại ghế</th>
+                    <th>Số ghế</th>
+                    <th>Giá vé</th>
+                    <th>Trạng thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="flight : ${flights}">
+                    <td th:text="${flight.plane.planeModel}">Airbus A321</td>
+                    <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
+                    <td th:text="${flight.takeOff}">SGN</td>
+                    <td th:text="${flight.land}">HAN</td>
+                    <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
+                    <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
+                    <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
+                    <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
+                    <td class="num"
+                        th:text="${#numbers.formatDecimal(flight.flightSchedule.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                        1,500,000 VND
+                    </td>
+                    <td>
+                        <span th:switch="${flight.plane.status}">
+                            <span th:case="'Scheduled'" class="status-badge status-scheduled"
+                                  th:text="${flight.plane.status}">Scheduled</span>
+                            <span th:case="'Ongoing'" class="status-badge status-ongoing"
+                                  th:text="${flight.plane.status}">Ongoing</span>
+                            <span th:case="'Completed'" class="status-badge status-completed"
+                                  th:text="${flight.plane.status}">Completed</span>
+                            <span th:case="*" class="status-badge status-cancelled" th:text="${flight.plane.status}">Cancelled</span>
+                        </span>
+                        <form th:action="@{@{/login}}">
+                            <button>Đặt vé ngay</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${flights == null or flights.isEmpty()}">
+                    <td colspan="12">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Không có lịch bay nào.</p>
+                            <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     <h1>Chào mừng đến với SkyTicket!</h1>
     <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
 

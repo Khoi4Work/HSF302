@@ -87,7 +87,7 @@
         </select>
 
         <label>Chuyến bay:</label>
-        <select th:field="*{flight.flightId}">
+        <select th:field="*{plane.flightId}">
             <option th:each="f : ${flights}" th:value="${f.flightId}" th:text="${f.planeModel}"></option>
         </select>
 
@@ -99,6 +99,7 @@
 
         <button type="submit">Đặt vé</button>
     </form>
+
 
     <a th:href="@{/booking/list}">← Quay lại danh sách đặt vé</a>
 </main>

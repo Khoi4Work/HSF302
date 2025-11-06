@@ -8,13 +8,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import sum25.se.entity.FlightSchedule_Plane;
 import sum25.se.entity.Users;
+import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IUsersService;
+
+import java.util.List;
 
 @Controller
 public class LoginController {
     @Autowired
     private IUsersService iUsersService;
+    @Autowired
+    private IFlightSchedulePlaneService iFlightSchedulePlaneService;
 
     @GetMapping()
     public String mainPage(){
@@ -41,7 +47,9 @@ public class LoginController {
     }
 
     @GetMapping("/main")
-    public String showMain() {
+    public String showMain(Model model) {
+        List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
+        model.addAttribute("flights", flightList);
         return "main";
     }
 
@@ -54,6 +62,8 @@ public class LoginController {
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
         model.addAttribute("user", user);
+        List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
+        model.addAttribute("flights", flightList);
         return "mainPage";
     }
 
