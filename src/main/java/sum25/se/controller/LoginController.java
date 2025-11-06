@@ -16,12 +16,12 @@ public class LoginController {
     @Autowired
     private IUsersService iUsersService;
 
-    @GetMapping()
+    @GetMapping("/")
     public String mainPage(){
         return "main";
     }
 
-    @GetMapping({"/login", "/"})
+    @GetMapping("/login")
     public String showLogin(){
         return "login";
     }
