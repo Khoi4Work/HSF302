@@ -1,6 +1,7 @@
 package sum25.se.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sum25.se.entity.FlightSchedule_Plane;
+import sum25.se.entity.RoleUsers;
 import sum25.se.entity.Users;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IUsersService;
@@ -23,17 +25,20 @@ public class LoginController {
     private IFlightSchedulePlaneService iFlightSchedulePlaneService;
 
     @GetMapping("/")
-    public String mainPage(){
+    public String mainPage(Model model) {
+        List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
+        model.addAttribute("flights", flightList);
         return "main";
     }
 
+
     @GetMapping("/login")
-    public String showLogin(){
+    public String showLogin() {
         return "login";
     }
 
     @GetMapping("/register")
-    public ModelAndView showRegister(){
+    public ModelAndView showRegister() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", new Users());
         modelAndView.setViewName("register");
@@ -41,7 +46,7 @@ public class LoginController {
     }
 
     @PostMapping("/register-success")
-    public String showRegisterSuccess( Users user){
+    public String showRegisterSuccess(Users user) {
         System.out.println(user);
         iUsersService.createUser(user);
         return "redirect:/login";
@@ -62,10 +67,16 @@ public class LoginController {
     @GetMapping("/mainPage")
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
+
         model.addAttribute("user", user);
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
         model.addAttribute("flights", flightList);
         return "mainPage";
+    }
+
+    @GetMapping("/admin")
+    public String showAdminPage() {
+        return "redirect:/schedule/admin";
     }
 
     @PostMapping("/process")
@@ -74,8 +85,12 @@ public class LoginController {
         if (user == null) {
             return "redirect:/error";
         }
-        System.out.println(email+"-"+password);
+
+        System.out.println(email + "-" + password);
         session.setAttribute("LoggedIn", user);
+        if (user.getRoleUses() == RoleUsers.ADMIN) {
+            return "redirect:/schedule/admin";
+        }
         return "redirect:/mainPage";
     }
 

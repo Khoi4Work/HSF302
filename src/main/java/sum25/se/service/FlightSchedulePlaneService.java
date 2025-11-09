@@ -21,4 +21,14 @@ public class FlightSchedulePlaneService implements IFlightSchedulePlaneService {
     public List<FlightSchedule_Plane> findAll() {
         return flightSchedulePlaneRepository.findAll();
     }
+
+    @Override
+    public void deleteSchedule(int id) {
+        flightSchedulePlaneRepository.deleteById(id);
+    }
+
+    @Override
+    public FlightSchedule_Plane findById(int id) {
+        return flightSchedulePlaneRepository.findByFlightPlaneId(id);
+    }
 }

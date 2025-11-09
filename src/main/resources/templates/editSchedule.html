@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chỉnh Sửa Lịch Bay</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+</head>
+<body>
+
+<header>
+    <h2>✈️ SkyTicket - Chỉnh Sửa Lịch Bay</h2>
+</header>
+
+<main>
+    <h1>Chỉnh Sửa Lịch Bay</h1>
+
+    <form th:action="@{/schedule/editSchedule}" th:object="${schedule}" method="post" class="search-section">
+
+        <div class="form-group">
+            <label for="flightPlaneId">ID Lịch Bay</label>
+            <input type="number" id="flightPlaneId" th:field="*{flightPlaneId}" readonly style="background: #f0f0f0; cursor: not-allowed;">
+        </div>
+
+        <div class="form-group">
+            <label for="takeOff">Điểm cất cánh</label>
+            <input type="text" id="takeOff" th:field="*{takeOff}">
+            <p th:if="${#fields.hasErrors('takeOff')}" th:errors="*{takeOff}" class="error" style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="land">Điểm hạ cánh</label>
+            <input type="text" id="land" th:field="*{land}">
+            <p th:if="${#fields.hasErrors('land')}" th:errors="*{land}" class="error" style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="takeOffTime">Thời gian cất cánh</label>
+            <input type="datetime-local" id="takeOffTime" th:field="*{takeOffTime}">
+            <p th:if="${#fields.hasErrors('takeOffTime')}" th:errors="*{takeOffTime}" class="error" style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="landTime">Thời gian hạ cánh</label>
+            <input type="datetime-local" id="landTime" th:field="*{landTime}">
+            <p th:if="${#fields.hasErrors('landTime')}" th:errors="*{landTime}" class="error" style="color: #dc3545; font-size: 0.85rem; margin-top: 4px;"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="plane">Máy bay</label>
+            <select id="plane" name="planeId">
+                <option value="">-- Chọn máy bay --</option>
+                <option th:each="plane : ${planes}"
+                        th:value="${plane.flightId}"
+                        th:text="${plane.planeModel}"
+                        th:selected="${schedule.plane != null && schedule.plane.flightId == plane.flightId}"></option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="flightSchedule">Lịch trình bay</label>
+            <select id="flightSchedule" name="scheduleId">
+                <option value="">-- Chọn lịch trình --</option>
+                <option th:each="fs : ${flightSchedules}"
+                        th:value="${fs.scheduleId}"
+                        th:text="${fs.seatClass + ' - Ghế số ' + fs.seatNumber}"
+                        th:selected="${schedule.flightSchedule != null && schedule.flightSchedule.scheduleId == fs.scheduleId}"></option>
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-top: 20px;">
+            <button type="submit" class="btn">Cập nhật</button>
+            <a th:href="@{/schedule/admin}" class="btn" style="background: linear-gradient(135deg, #6c757d, #5a6268); margin-top: 0;">Hủy</a>
+        </div>
+    </form>
+</main>
+
+<footer>
+    <p>© 2025 SkyTicket. All rights reserved.</p>
+</footer>
+
+</body>
+</html>
