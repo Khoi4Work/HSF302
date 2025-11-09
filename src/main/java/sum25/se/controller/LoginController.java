@@ -31,6 +31,7 @@ public class LoginController {
     public String showLogin(){
         return "login";
     }
+
     @GetMapping("/register")
     public ModelAndView showRegister(){
         ModelAndView modelAndView = new ModelAndView();
