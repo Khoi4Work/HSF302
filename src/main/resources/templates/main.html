@@ -40,11 +40,7 @@
                        th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
             </div>
 
-            <div class="form-group">
-                <label for="returnDate">Ngày về:</label>
-                <input type="date" id="returnDate" name="returnDate"
-                       th:value="${#temporals.format(returnDate, 'yyyy-MM-dd')}" placeholder="Chọn ngày về">
-            </div>
+
 
             <div class="form-group">
                 <label for="seatClass">Hạng ghế:</label>
@@ -148,37 +144,7 @@
     <p>© 2025 SkyTicket. All rights reserved.</p>
 </footer>
 
-<!-- ✅ FIXED: Script kiểm tra ngày đi / về -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const departureDateInput = document.getElementById("date");
-        const returnDateInput = document.getElementById("returnDate");
 
-        function validateDates() {
-            const departVal = departureDateInput.value;
-            const returnVal = returnDateInput.value;
-
-            if (!departVal) return;
-
-            const depart = new Date(departVal);
-            const ret = returnVal ? new Date(returnVal) : null;
-
-            // Giới hạn ngày về không được nhỏ hơn ngày đi
-            returnDateInput.min = departVal;
-
-            if (ret && ret < depart) {
-                returnDateInput.value = departVal;
-            }
-        }
-
-        // Dùng 'input' thay vì 'change'
-        departureDateInput.addEventListener("input", validateDates);
-        returnDateInput.addEventListener("input", validateDates);
-
-        // Kiểm tra khi load trang
-        validateDates();
-    });
-</script>
 
 </body>
 </html>

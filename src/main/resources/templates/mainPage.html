@@ -12,16 +12,15 @@
 </header>
 
 <nav>
-    <a th:href="@{/login}">Đăng nhập</a>
-    <a th:href="@{/register}">Đăng ký</a>
     <a th:href="@{/booking/create}">Đặt vé</a>
     <a th:href="@{/booking/list}">Danh sách vé</a>
     <a th:href="@{/flights}">Tra cứu chuyến bay</a>
+    <a th:href="@{/logout}">Đăng xuất</a>
 </nav>
 
 <main>
     <div class="search-section">
-        <form th:action="@{/login}" method="get" class="search-form">
+        <form th:action="@{/flight/search}" method="get" class="search-form">
             <div class="form-group">
                 <label for="departure">Điểm đi:</label>
                 <input type="text" id="departure" name="departure"
@@ -40,11 +39,7 @@
                        th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
             </div>
 
-            <div class="form-group">
-                <label for="returnDate">Ngày về:</label>
-                <input type="date" id="returnDate" name="returnDate"
-                       th:value="${#temporals.format(returnDate, 'yyyy-MM-dd')}" placeholder="Chọn ngày về">
-            </div>
+
 
             <div class="form-group">
                 <label for="seatClass">Hạng ghế:</label>
@@ -115,10 +110,9 @@
                                   th:text="${flight.plane.status}">Ongoing</span>
                             <span th:case="'Completed'" class="status-badge status-completed"
                                   th:text="${flight.plane.status}">Completed</span>
-                            <span th:case="*" class="status-badge status-cancelled"
-                                  th:text="${flight.plane.status}">Cancelled</span>
+                            <span th:case="*" class="status-badge status-cancelled" th:text="${flight.plane.status}">Cancelled</span>
                         </span>
-                        <form th:action="@{/login}">
+                        <form th:action="@{/booking/create}">
                             <button>Đặt vé ngay</button>
                         </form>
                     </td>
@@ -148,37 +142,6 @@
     <p>© 2025 SkyTicket. All rights reserved.</p>
 </footer>
 
-<!-- ✅ FIXED: Script kiểm tra ngày đi / về -->
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const departureDateInput = document.getElementById("date");
-        const returnDateInput = document.getElementById("returnDate");
-
-        function validateDates() {
-            const departVal = departureDateInput.value;
-            const returnVal = returnDateInput.value;
-
-            if (!departVal) return;
-
-            const depart = new Date(departVal);
-            const ret = returnVal ? new Date(returnVal) : null;
-
-            // Giới hạn ngày về không được nhỏ hơn ngày đi
-            returnDateInput.min = departVal;
-
-            if (ret && ret < depart) {
-                returnDateInput.value = departVal;
-            }
-        }
-
-        // Dùng 'input' thay vì 'change'
-        departureDateInput.addEventListener("input", validateDates);
-        returnDateInput.addEventListener("input", validateDates);
-
-        // Kiểm tra khi load trang
-        validateDates();
-    });
-</script>
 
 </body>
 </html>

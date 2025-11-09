@@ -67,7 +67,7 @@ public class LoginController {
     @GetMapping("/mainPage")
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
-
+        System.out.println("het cuu");
         model.addAttribute("user", user);
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
         model.addAttribute("flights", flightList);
