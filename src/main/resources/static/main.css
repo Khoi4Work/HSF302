@@ -293,6 +293,74 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 5px 14px rgba(0, 74, 173, 0.3);
 }
+/* ============================
+   ACTION BUTTONS (Edit/Delete)
+============================ */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+}
+
+.btn-edit,
+.btn-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #0088cc, #00b4d8);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: linear-gradient(135deg, #006ba3, #0096c7);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 136, 204, 0.3);
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #dc3545, #e63946);
+    color: white;
+}
+
+.btn-delete:hover {
+    background: linear-gradient(135deg, #c82333, #d62828);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+/* Icon trước text (optional) */
+.btn-edit::before {
+    content: "✏️";
+}
+
+.btn-delete::before {
+    content: "🗑️";
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .action-buttons {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .btn-edit,
+    .btn-delete {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 
 /* Responsive chỉnh form khi màn nhỏ */
 @media (max-width: 600px) {

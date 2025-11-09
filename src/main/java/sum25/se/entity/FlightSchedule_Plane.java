@@ -18,10 +18,10 @@ public class FlightSchedule_Plane {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int flightPlaneId;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "planeId")
     private Plane plane;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "scheduleId")
     private FlightSchedule flightSchedule;
     private String takeOff;

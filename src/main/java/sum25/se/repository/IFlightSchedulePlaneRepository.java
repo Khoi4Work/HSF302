@@ -11,4 +11,6 @@ public interface IFlightSchedulePlaneRepository extends JpaRepository<FlightSche
     List<FlightSchedule_Plane> findByTakeOffAndLandAndTakeOffTimeBetween(String takeOff, String land, LocalDateTime takeOffTimeAfter, LocalDateTime takeOffTimeBefore);
 
     List<FlightSchedule_Plane> findByTakeOffAndLandAndTakeOffTimeBetweenAndFlightSchedule_SeatClass(String takeOff, String land, LocalDateTime takeOffTimeAfter, LocalDateTime takeOffTimeBefore, String flightScheduleSeatClass);
+
+    FlightSchedule_Plane findByFlightPlaneId(int flightPlaneId);
 }
