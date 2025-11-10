@@ -22,6 +22,8 @@ public class AdminController {
     IFlightService iFlightService;
     @Autowired
     IFlightScheduleService iFlightScheduleService;
+    @Autowired
+    private IUsersService iUsersService;
 
     @GetMapping("/admin")
     public ModelAndView showAdminPage(HttpSession httpSession) {
@@ -32,12 +34,12 @@ public class AdminController {
             modelAndView.setViewName("redirect:/login");
             return modelAndView;
         }
+        modelAndView.addObject("user", users);
 
         // Kiểm tra nếu vừa login thành công
         Boolean loginSuccess = (Boolean) httpSession.getAttribute("loginSuccess");
         if (loginSuccess != null && loginSuccess) {
             modelAndView.addObject("loginSuccess", true);
-            modelAndView.addObject("user", users);
             httpSession.removeAttribute("loginSuccess"); // Xóa sau khi đã hiển thị
         }
 
@@ -61,9 +63,9 @@ public class AdminController {
 
 
     @GetMapping("/addSchedule")
-    public ModelAndView addNewSchedule(HttpSession httpSession) {
+    public ModelAndView showAddNewSchedule(HttpSession httpSession) {
         Users user = (Users) httpSession.getAttribute("LoggedIn");
-        if(user == null){
+        if (user == null) {
             return new ModelAndView("redirect:/main");
         } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
             return new ModelAndView("redirect:/login");
@@ -131,7 +133,7 @@ public class AdminController {
 
 
     @GetMapping("/editSchedule/{id}")
-    public ModelAndView editSchedule(HttpSession httpSession, @PathVariable int id) {
+    public ModelAndView showEditSchedule(HttpSession httpSession, @PathVariable int id) {
         Users user = (Users) httpSession.getAttribute("LoggedIn");
         ModelAndView modelAndView = new ModelAndView();
 
@@ -185,4 +187,19 @@ public class AdminController {
         iFlightSchedulePlaneService.add(schedule);
         return "redirect:/schedule/admin";
     }
+
+    @GetMapping("/admin/users")
+    public ModelAndView showUserList(HttpSession session) {
+        Users loggedIn = (Users) session.getAttribute("LoggedIn");
+
+        if (loggedIn == null || loggedIn.getRoleUser() != RoleUsers.ADMIN) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        List<Users> users = iUsersService.getAllUsers();
+        ModelAndView mv = new ModelAndView("admin_manage-user");
+        mv.addObject("users", users);
+        return mv;
+    }
+
 }

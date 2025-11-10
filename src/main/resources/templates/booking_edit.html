@@ -120,12 +120,12 @@
         <div class="info-display" th:text="${passengerInfo.passengerId ?: 'N/A'}"></div>
 
         <!-- Thông tin có thể cập nhật -->
-        <label>Tên hành khách:</label>
+        <label for="fullName">Tên hành khách:</label>
         <input type="text" name="fullName" id="fullName" 
                th:value="${passengerInfo.fullName}" 
                placeholder="Nhập tên hành khách" required />
 
-        <label>Giới tính:</label>
+        <label for="gender">Giới tính:</label>
         <select name="gender" id="gender">
             <option value="">-- Chọn giới tính --</option>
             <option value="Male" th:selected="${passengerInfo.gender == 'Male'}">Nam</option>
@@ -133,12 +133,12 @@
             <option value="Other" th:selected="${passengerInfo.gender == 'Other'}">Khác</option>
         </select>
 
-        <label>Số hộ chiếu:</label>
+        <label for="passportNumber">Số hộ chiếu:</label>
         <input type="text" name="passportNumber" id="passportNumber" 
                th:value="${passengerInfo.passportNumber}" 
                placeholder="Nhập số hộ chiếu" />
 
-        <label>Ngày sinh:</label>
+        <label for="dateOfBirth">Ngày sinh:</label>
         <input type="date" name="dateOfBirth" id="dateOfBirth" 
                th:value="${passengerInfo.dateOfBirth != null ? #temporals.format(passengerInfo.dateOfBirth, 'yyyy-MM-dd') : ''}" />
 

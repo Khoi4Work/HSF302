@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sum25.se.entity.FlightSchedule_Plane;
 import sum25.se.entity.RoleUsers;
+import sum25.se.entity.StatusUsers;
 import sum25.se.entity.Users;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IUsersService;
@@ -92,6 +93,10 @@ public class LoginController {
         if (user == null) {
             return "redirect:/error";
         }
+//        else if (user.getStatus().equals(StatusUsers.INACTIVE)) {
+//            return "";
+//        }
+
 
         System.out.println(email + "-" + password);
         session.setAttribute("LoggedIn", user);

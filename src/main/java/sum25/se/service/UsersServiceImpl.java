@@ -2,6 +2,7 @@ package sum25.se.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sum25.se.entity.StatusUsers;
 import sum25.se.entity.Users;
 import sum25.se.repository.IUsersRepository;
 
@@ -45,7 +46,10 @@ public class UsersServiceImpl implements IUsersService {
 
     @Override
     public void deleteUser(Integer id) {
-        iUsersRepository.deleteById(id);
+        Users users = iUsersRepository.findById(id)
+                .orElse(null);
+        users.setStatus(StatusUsers.INACTIVE);
+        iUsersRepository.save(users);
     }
 
     @Override

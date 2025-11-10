@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý người dùng - SkyTicket</title>
+    <link rel="stylesheet" th:href="@{/main.css}">
+</head>
+<body>
+<header>
+    <h2>👤 Quản lý người dùng</h2>
+</header>
+
+<main>
+    <a th:href="@{/schedule/admin}">
+        <button>⬅ Quay về trang chính</button>
+    </a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Họ tên</th>
+            <th>Email</th>
+            <th>SĐT</th>
+            <th>Hộ chiếu</th>
+            <th>Ngày sinh</th>
+            <th>Vai trò</th>
+            <th>Thao tác</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}">
+            <td th:text="${user.userId}">1</td>
+            <td th:text="${user.fullName}">Nguyễn Văn A</td>
+            <td th:text="${user.email}">abc@gmail.com</td>
+            <td th:text="${user.phone}">0123456789</td>
+            <td th:text="${user.passportNumber}">B123456</td>
+            <td th:text="${user.dateOfBirth}">2000-01-01</td>
+            <td th:text="${user.roleUser}">USER</td>
+<!--            <td>-->
+<!--                <form th:action="@{'/delete/user/' + ${user.userId}}" method="post" style="display:inline;">-->
+<!--                    <button type="submit" onclick="return confirm('Xóa người dùng này?')">🗑 Xóa</button>-->
+<!--                </form>-->
+<!--            </td>-->
+        </tr>
+
+        <tr th:if="${users == null or users.isEmpty()}">
+            <td colspan="8">Không có người dùng nào.</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer>
+    <p>© 2025 SkyTicket</p>
+</footer>
+</body>
+</html>

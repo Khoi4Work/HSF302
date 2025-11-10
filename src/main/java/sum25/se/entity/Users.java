@@ -23,6 +23,7 @@ public class Users {
     String phone;
     String passportNumber;
     LocalDate dateOfBirth;
+    StatusUsers status = StatusUsers.ACTIVE;
     @Enumerated(EnumType.STRING)
     RoleUsers roleUser = RoleUsers.USER;
     @OneToMany(mappedBy = "users")
