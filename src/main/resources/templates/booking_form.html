@@ -92,25 +92,35 @@
     <h2>Form Đặt Vé</h2>
 
     <form th:action="@{/booking/create}" method="post" id="bookingForm">
-        <label>Tên hành khách:</label>
+        <label for="passengerName">Tên hành khách:</label>
         <input type="text" name="passengerName" id="passengerName" placeholder="Nhập tên hành khách" required />
 
-        <label>Chuyến bay:</label>
+        <label for="flightSelect">Chuyến bay:</label>
         <select name="flightId" id="flightSelect" required>
             <option value="">-- Chọn chuyến bay --</option>
-            <option th:each="f : ${flights}" th:value="${f.flightId}" th:text="${f.planeModel}"></option>
+            <option th:each="f : ${schedule_plane}"
+                    th:value="${f.flightPlaneId}"
+                    th:text="${f.plane.planeModel + ' (' + f.takeOff + ' - ' + f.land + ')'}"
+                    th:selected="${selectedFlight != null and f.flightPlaneId == selectedFlight.flightPlaneId}">
+            </option>
         </select>
 
-        <label>Hạng ghế:</label>
+        <label for="seatClassSelect">Hạng ghế:</label>
         <select name="seatClass" id="seatClassSelect" required>
             <option value="">-- Chọn hạng ghế --</option>
-            <option value="Economy">Economy</option>
-            <option value="Business">Business</option>
+            <option value="Economy"
+                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Economy'}">Economy</option>
+            <option value="Business"
+                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Business'}">Business</option>
         </select>
 
-        <label>Tổng giá:</label>
-        <input type="number" name="totalPrice" id="totalPrice" readonly />
-        <div id="priceDisplay" class="price-display" style="margin-top: 5px;"></div>
+        <label for="totalPrice">Tổng giá:</label>
+        <input type="number" name="totalPrice" id="totalPrice"
+               th:value="${selectedFlight != null ? selectedFlight.flightSchedule.price : ''}" readonly />
+        <div id="priceDisplay" class="price-display"
+             th:text="${selectedFlight != null ? #numbers.formatDecimal(selectedFlight.flightSchedule.price, 0, 'COMMA', 0, 'POINT') + ' VND' : ''}">
+        </div>
+
 
         <button type="submit">Đặt vé</button>
     </form>
@@ -136,9 +146,9 @@
         const seatClassSelect = document.getElementById('seatClassSelect');
         const totalPriceInput = document.getElementById('totalPrice');
         const priceDisplay = document.getElementById('priceDisplay');
-        
+
         const selectedSeatClass = seatClassSelect.value;
-        
+
         if (selectedSeatClass && prices[selectedSeatClass]) {
             const price = prices[selectedSeatClass];
             // Set giá vào input field (sẽ được submit với form)
@@ -157,20 +167,20 @@
     document.addEventListener('DOMContentLoaded', function() {
         const seatClassSelect = document.getElementById('seatClassSelect');
         const totalPriceInput = document.getElementById('totalPrice');
-        
+
         // Lắng nghe sự kiện thay đổi hạng ghế
         seatClassSelect.addEventListener('change', updatePrice);
-        
+
         // Nếu đã có giá trị seatClass (từ server), tự động cập nhật giá
         if (seatClassSelect.value) {
             updatePrice();
         }
-        
+
         // Validate form trước khi submit
         document.getElementById('bookingForm').addEventListener('submit', function(e) {
             const passengerName = document.getElementById('passengerName').value.trim();
             const flightSelect = document.getElementById('flightSelect');
-            
+
             if (!passengerName) {
                 e.preventDefault();
                 alert('Vui lòng nhập tên hành khách!');

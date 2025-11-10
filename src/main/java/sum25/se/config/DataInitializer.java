@@ -67,7 +67,7 @@ public class DataInitializer implements CommandLineRunner {
         } else {
             System.out.println("ℹ️ Users already exist — skipping initialization.");
         }
-        if (airportService.getAiportByCode("SGN") == null) {
+        if (airportService.getAllAirports().isEmpty()) {
             Airport tsn = new Airport();
             tsn.setAirportName("Sân bay Tân Sơn Nhất");
             tsn.setCode("SGN");

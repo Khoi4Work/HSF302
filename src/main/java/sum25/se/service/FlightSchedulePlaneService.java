@@ -10,25 +10,25 @@ import java.util.List;
 @Service
 public class FlightSchedulePlaneService implements IFlightSchedulePlaneService {
     @Autowired
-    IFlightSchedulePlaneRepository flightSchedulePlaneRepository;
+    IFlightSchedulePlaneRepository iFlightSchedulePlaneRepository;
 
     @Override
     public FlightSchedule_Plane add(FlightSchedule_Plane flightSchedulePlane) {
-        return flightSchedulePlaneRepository.save(flightSchedulePlane);
+        return iFlightSchedulePlaneRepository.save(flightSchedulePlane);
     }
 
     @Override
     public List<FlightSchedule_Plane> findAll() {
-        return flightSchedulePlaneRepository.findAll();
+        return iFlightSchedulePlaneRepository.findAll();
     }
 
     @Override
     public void deleteSchedule(int id) {
-        flightSchedulePlaneRepository.deleteById(id);
+        iFlightSchedulePlaneRepository.deleteById(id);
     }
 
     @Override
     public FlightSchedule_Plane findById(int id) {
-        return flightSchedulePlaneRepository.findByFlightPlaneId(id);
+        return iFlightSchedulePlaneRepository.findByFlightPlaneId(id);
     }
 }

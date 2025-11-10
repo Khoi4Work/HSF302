@@ -70,6 +70,11 @@ public class FlightServiceImpl implements IFlightService {
         return searchWithSeatClass(departure, destination, date, seatClass);
     }
 
+    @Override
+    public FlightSchedule_Plane getFlightPlaneByFlightId(Integer flightId) {
+        return iFlightSchedulePlaneRepository.findByFlightPlaneId(flightId);
+    }
+
     private List<FlightSchedule_Plane> searchWithoutSeatClass(String departure, String destination, LocalDate date) {
         return iFlightSchedulePlaneRepository
                 .findByTakeOffAndLandAndTakeOffTimeBetween(

@@ -40,9 +40,6 @@
             </div>
 
 
-
-
-
             <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
         </form>
     </div>
@@ -59,41 +56,42 @@
         </div>
     </div>
 
-    <div class="table-card">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>Mẫu máy bay</th>
-                    <th>Sân bay đi</th>
-                    <th>Điểm cất cánh</th>
-                    <th>Điểm hạ cánh</th>
-                    <th>Ngày cất cánh</th>
-                    <th>Giờ cất cánh</th>
-                    <th>Ngày hạ cánh</th>
-                    <th>Giờ hạ cánh</th>
-                    <th>Loại ghế</th>
-                    <th>Số ghế</th>
-                    <th>Giá vé</th>
-                    <th>Trạng thái</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="flight : ${flights}">
-                    <td th:text="${flight.plane.planeModel}">Airbus A321</td>
-                    <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
-                    <td th:text="${flight.takeOff}">SGN</td>
-                    <td th:text="${flight.land}">HAN</td>
-                    <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
-                    <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
-                    <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
-                    <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                    <td class="num">
-                        1,500,000 VND
-                    </td>
-                    <td>
+
+        <div class="table-card">
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Mẫu máy bay</th>
+                        <th>Sân bay đi</th>
+                        <th>Điểm cất cánh</th>
+                        <th>Điểm hạ cánh</th>
+                        <th>Ngày cất cánh</th>
+                        <th>Giờ cất cánh</th>
+                        <th>Ngày hạ cánh</th>
+                        <th>Giờ hạ cánh</th>
+                        <th>Loại ghế</th>
+                        <th>Số ghế</th>
+                        <th>Giá vé</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="flight : ${flights}">
+                        <td th:text="${flight.plane.planeModel}">Airbus A321</td>
+                        <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
+                        <td th:text="${flight.takeOff}">SGN</td>
+                        <td th:text="${flight.land}">HAN</td>
+                        <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                        <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
+                        <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                        <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
+                        <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
+                        <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
+                        <td class="num">
+                            1,500,000 VND
+                        </td>
+                        <td>
                         <span th:switch="${flight.plane.status}">
                             <span th:case="'Scheduled'" class="status-badge status-scheduled"
                                   th:text="${flight.plane.status}">Scheduled</span>
@@ -103,25 +101,30 @@
                                   th:text="${flight.plane.status}">Completed</span>
                             <span th:case="*" class="status-badge status-cancelled" th:text="${flight.plane.status}">Cancelled</span>
                         </span>
-                        <form th:action="@{/booking/create}">
-                            <button>Đặt vé ngay</button>
-                        </form>
-                    </td>
-                </tr>
 
-                <tr th:if="${flights == null or flights.isEmpty()}">
-                    <td colspan="12">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📭</div>
-                            <p>Không có lịch bay nào.</p>
-                            <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        </td>
+                        <td>
+                            <form th:action="@{/booking/create}">
+                                <input type="hidden" name="flightId" th:value="${flight.flightPlaneId}" />
+                                <button type="submit">Đặt vé ngay</button>
+                            </form>
+                        </td>
+
+                    </tr>
+
+                    <tr th:if="${flights == null or flights.isEmpty()}">
+                        <td colspan="12">
+                            <div class="empty-state">
+                                <div class="empty-state-icon">📭</div>
+                                <p>Không có lịch bay nào.</p>
+                                <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </div>
 
     <h1>Chào mừng đến với SkyTicket!</h1>
     <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>

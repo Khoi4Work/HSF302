@@ -9,14 +9,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import sum25.se.entity.Booking;
-import sum25.se.entity.PassengerInfo;
-import sum25.se.entity.Plane;
-import sum25.se.entity.Users;
-import sum25.se.service.IBookingService;
-import sum25.se.service.IFlightService;
-import sum25.se.service.IPassengerInfoService;
-import sum25.se.service.IUsersService;
+import sum25.se.entity.*;
+import sum25.se.service.*;
 
 import java.util.List;
 
@@ -29,20 +23,31 @@ public class BookingController {
     @Autowired
     IFlightService iFlightService;
     @Autowired
-    IUsersService iUsersService;
-    @Autowired
     IPassengerInfoService iPassengerInfoService;
+    @Autowired
+    private IFlightSchedulePlaneService iFlightSchedulePlaneService;
 
-    // Hiển thị form đặt vé
     @GetMapping("/create")
-    public String showBookingForm(Model model, HttpSession session) {
+    public String showBookingForm(@RequestParam(required = false) Integer flightId,
+                                  Model model,
+                                  HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
             return "redirect:/main";
         }
-        model.addAttribute("flights", iFlightService.getAllFlights());
+        System.out.println("show booking create...");
+        // Lấy danh sách chuyến bay để chọn (nếu người dùng muốn đổi)
+        model.addAttribute("schedule_plane", iFlightSchedulePlaneService.findAll());
+
+        // Nếu có flightId -> Lấy chuyến bay cụ thể để pre-fill form
+        if (flightId != null) {
+            FlightSchedule_Plane flight = iFlightService.getFlightPlaneByFlightId(flightId);
+            model.addAttribute("selectedFlight", flight);
+        }
+
         return "booking_form";
     }
+
 
     // Xử lý khi người dùng submit form
     @PostMapping("/create")

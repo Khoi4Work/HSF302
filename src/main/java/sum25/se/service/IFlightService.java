@@ -16,4 +16,6 @@ public interface IFlightService {
     Plane addFlight(Plane plane);
 
     List<FlightSchedule_Plane> searchFlights(String departure, String destination, LocalDate date, String seatClass);
+
+    FlightSchedule_Plane getFlightPlaneByFlightId(Integer flightId);
 }
