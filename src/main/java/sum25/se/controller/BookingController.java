@@ -53,13 +53,13 @@ public class BookingController {
             @RequestParam("totalPrice") Integer totalPrice,
             HttpSession session,
             Model model) {
-        
+
         // Kiểm tra user đăng nhập
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
             return "redirect:/main";
         }
-        
+
         // Lấy Plane từ flightId
         Plane plane = iFlightService.getFlightById(flightId);
         if (plane == null) {
@@ -67,25 +67,24 @@ public class BookingController {
             model.addAttribute("flights", iFlightService.getAllFlights());
             return "booking_form";
         }
-        
-        // Tạo Booking với user đang đăng nhập
-        Booking booking = new Booking();
-        booking.setPlane(plane);
-        booking.setSeatClass(seatClass);
-        booking.setTotalPrice(totalPrice);
-        booking.setUsers(user); // Gán user đang đăng nhập
-        
+
+
         // Lưu Booking trước
-        Booking savedBooking = iBookingService.createBooking(booking);
-        
+        Booking savedBooking = iBookingService.createBooking(
+                seatClass,
+                totalPrice,
+                user,
+                plane
+        );
+
         // Tạo PassengerInfo với tên hành khách
         PassengerInfo passengerInfo = new PassengerInfo();
         passengerInfo.setFullName(passengerName);
         passengerInfo.setBooking(savedBooking);
-        
+
         // Lưu PassengerInfo
         iPassengerInfoService.createPassenger(passengerInfo);
-        
+
         model.addAttribute("message", "Đặt vé thành công!");
         return "booking_success"; // → resources/templates/booking_success.html
     }
@@ -97,7 +96,7 @@ public class BookingController {
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         // Lấy danh sách booking của user đang đăng nhập
         List<Booking> bookings = iBookingService.getBookingsByUser(user);
         model.addAttribute("bookings", bookings);
@@ -112,7 +111,7 @@ public class BookingController {
             if (user == null) {
                 return "redirect:/login";
             }
-            
+
             // Lấy booking
             Booking booking = iBookingService.getBookingById(id);
             if (booking == null) {
@@ -121,7 +120,7 @@ public class BookingController {
                 model.addAttribute("bookings", bookings);
                 return "booking_list";
             }
-            
+
             // Kiểm tra quyền sở hữu - kiểm tra từng bước để tránh NullPointerException
             if (booking.getUsers() == null) {
                 model.addAttribute("error", "Vé đặt này không có thông tin người dùng!");
@@ -129,21 +128,21 @@ public class BookingController {
                 model.addAttribute("bookings", bookings);
                 return "booking_list";
             }
-            
+
             if (booking.getUsers().getUserId() == null || user.getUserId() == null) {
                 model.addAttribute("error", "Không thể xác định quyền truy cập!");
                 List<Booking> bookings = iBookingService.getBookingsByUser(user);
                 model.addAttribute("bookings", bookings);
                 return "booking_list";
             }
-            
+
             if (!booking.getUsers().getUserId().equals(user.getUserId())) {
                 model.addAttribute("error", "Bạn không có quyền cập nhật vé này!");
                 List<Booking> bookings = iBookingService.getBookingsByUser(user);
                 model.addAttribute("bookings", bookings);
                 return "booking_list";
             }
-            
+
             // Kiểm tra status - chỉ cho phép cập nhật khi PENDING
             if (booking.getStatus() != null && !booking.getStatus().toString().equals("PENDING")) {
                 model.addAttribute("error", "Chỉ có thể cập nhật vé đang ở trạng thái Đang chờ!");
@@ -151,7 +150,7 @@ public class BookingController {
                 model.addAttribute("bookings", bookings);
                 return "booking_list";
             }
-            
+
             // Lấy PassengerInfo
             PassengerInfo passengerInfo = null;
             if (booking.getPassengerInfos() != null && !booking.getPassengerInfos().isEmpty()) {
@@ -161,7 +160,7 @@ public class BookingController {
                 passengerInfo = new PassengerInfo();
                 passengerInfo.setBooking(booking);
             }
-            
+
             model.addAttribute("booking", booking);
             model.addAttribute("passengerInfo", passengerInfo);
             return "booking_edit";
@@ -196,25 +195,25 @@ public class BookingController {
             @RequestParam(value = "dateOfBirth", required = false) String dateOfBirthStr,
             HttpSession session,
             Model model) {
-        
+
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         // Lấy booking
         Booking booking = iBookingService.getBookingById(id);
         if (booking == null) {
             model.addAttribute("error", "Không tìm thấy vé đặt!");
             return "redirect:/booking/list";
         }
-        
+
         // Kiểm tra quyền sở hữu
         if (!booking.getUsers().getUserId().equals(user.getUserId())) {
             model.addAttribute("error", "Bạn không có quyền cập nhật vé này!");
             return "redirect:/booking/list";
         }
-        
+
         // Không cập nhật chuyến bay, hạng ghế, và giá - giữ nguyên giá trị cũ
         // Chỉ cập nhật thông tin PassengerInfo
         PassengerInfo passengerInfo = null;
@@ -224,11 +223,11 @@ public class BookingController {
             passengerInfo = new PassengerInfo();
             passengerInfo.setBooking(booking);
         }
-        
+
         passengerInfo.setFullName(fullName);
         passengerInfo.setGender(gender);
         passengerInfo.setPassportNumber(passportNumber);
-        
+
         // Xử lý dateOfBirth
         if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
             try {
@@ -239,7 +238,7 @@ public class BookingController {
                 // Nếu không parse được, giữ nguyên giá trị cũ
             }
         }
-        
+
         try {
             if (passengerInfo.getPassengerId() != null) {
                 // Cập nhật PassengerInfo hiện có
@@ -248,7 +247,7 @@ public class BookingController {
                 // Tạo PassengerInfo mới
                 iPassengerInfoService.createPassenger(passengerInfo);
             }
-            
+
             // Redirect về danh sách booking sau khi cập nhật thành công
             return "redirect:/booking/list";
         } catch (Exception e) {
@@ -258,7 +257,7 @@ public class BookingController {
             Booking refreshedBooking = iBookingService.getBookingById(id);
             if (refreshedBooking != null) {
                 model.addAttribute("booking", refreshedBooking);
-                PassengerInfo errorPassengerInfo = refreshedBooking.getPassengerInfos() != null && !refreshedBooking.getPassengerInfos().isEmpty() 
+                PassengerInfo errorPassengerInfo = refreshedBooking.getPassengerInfos() != null && !refreshedBooking.getPassengerInfos().isEmpty()
                         ? refreshedBooking.getPassengerInfos().get(0) : new PassengerInfo();
                 if (errorPassengerInfo.getPassengerId() == null) {
                     errorPassengerInfo.setBooking(refreshedBooking);
@@ -279,7 +278,7 @@ public class BookingController {
         if (user == null) {
             return "redirect:/login";
         }
-        
+
         // Kiểm tra booking có thuộc user này không
         Booking booking = iBookingService.getBookingById(id);
         if (booking == null) {
@@ -288,16 +287,16 @@ public class BookingController {
             model.addAttribute("bookings", bookings);
             return "booking_list";
         }
-        
+
         // Kiểm tra quyền sở hữu
-        if (booking.getUsers() == null || booking.getUsers().getUserId() == null || 
-            user.getUserId() == null || !booking.getUsers().getUserId().equals(user.getUserId())) {
+        if (booking.getUsers() == null || booking.getUsers().getUserId() == null ||
+                user.getUserId() == null || !booking.getUsers().getUserId().equals(user.getUserId())) {
             model.addAttribute("error", "Bạn không có quyền hủy vé này!");
             List<Booking> bookings = iBookingService.getBookingsByUser(user);
             model.addAttribute("bookings", bookings);
             return "booking_list";
         }
-        
+
         // Xóa vé (sẽ tự động xóa PassengerInfo và các liên kết liên quan)
         iBookingService.deleteBooking(id);
         return "redirect:/booking/list";

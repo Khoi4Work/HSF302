@@ -34,7 +34,16 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public Booking createBooking(Booking booking) {
+    public Booking createBooking(String seatClass,
+                                 Integer totalPrice,
+                                 Users user,
+                                 Plane plane) {
+        // Tạo Booking với user đang đăng nhập
+        Booking booking = new Booking();
+        booking.setPlane(plane);
+        booking.setSeatClass(seatClass);
+        booking.setTotalPrice(totalPrice);
+        booking.setUsers(user); // Gán user đang đăng nhập
         // Tự động set ngày đặt vé nếu chưa có
         if (booking.getBookingDate() == null || booking.getBookingDate().isEmpty()) {
             booking.setBookingDate(LocalDateTime.now().toString());
