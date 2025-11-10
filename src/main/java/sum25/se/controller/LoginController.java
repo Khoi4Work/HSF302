@@ -65,6 +65,13 @@ public class LoginController {
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
 
+        // Kiểm tra nếu vừa login thành công
+        Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
+        if (loginSuccess != null && loginSuccess) {
+            model.addAttribute("loginSuccess", true);
+            session.removeAttribute("loginSuccess"); // Xóa sau khi đã hiển thị
+        }
+
         model.addAttribute("user", user);
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
         model.addAttribute("flights", flightList);
@@ -79,7 +86,8 @@ public class LoginController {
     @PostMapping("/process")
     public String processLogin(HttpSession session,
                                @RequestParam String email,
-                               @RequestParam String password) {
+                               @RequestParam String password,
+                               Model model) {
         Users user = iUsersService.login(email, password);
         if (user == null) {
             return "redirect:/error";
@@ -87,6 +95,7 @@ public class LoginController {
 
         System.out.println(email + "-" + password);
         session.setAttribute("LoggedIn", user);
+        session.setAttribute("loginSuccess", true);
         if (user.getRoleUser() == RoleUsers.ADMIN) {
             return "redirect:/schedule/admin";
         }

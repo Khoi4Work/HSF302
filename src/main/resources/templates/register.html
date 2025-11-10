@@ -4,29 +4,271 @@
     <meta charset="UTF-8">
     <title>Flight Booking - Register</title>
     <style>
+        @keyframes fadeInUp {
+            from {
+                transform: translateY(10px);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(0, 120, 215, 0.5), 0 0 10px rgba(0, 120, 215, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(0, 120, 215, 0.8), 0 0 30px rgba(0, 120, 215, 0.5); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { border-color: rgba(0, 120, 215, 0.3); }
+            50% { border-color: rgba(0, 120, 215, 0.8); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(10px);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes placeholder {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes cloudMove {
+            0% {
+                background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
+            }
+            100% {
+                background-position: 200px 100px, -300px 150px, 250px -50px, -180px 200px, 220px -100px;
+            }
+        }
+
+        @keyframes mountainMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-20px); }
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        @keyframes twinkleSlow {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: url('https://images.unsplash.com/photo-1504198453319-5ce911bafcde?auto=format&fit=crop&w=1920&q=80') no-repeat center center fixed;
-            background-size: cover;
+            background: linear-gradient(180deg, 
+                #0A192F 0%,        /* Dark navy blue - trên cùng */
+                #1A3A5F 25%,       /* Darker blue */
+                #2A5B8F 50%,       /* Medium dark blue */
+                #3A7CBE 75%,       /* Lighter blue */
+                #4A9DE8 100%       /* Light blue - chân trời */
+            );
+            background-attachment: fixed;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Dãy núi silhouette */
+        body::before {
+            content: '';
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: 
+                linear-gradient(to top, #050F1A 0%, #0A192F 30%, transparent 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 600' preserveAspectRatio='none'%3E%3Cpath d='M0,600 L0,380 Q150,320 300,360 T600,340 T900,320 T1200,300 L1200,600 Z' fill='%23050F1A' opacity='0.9'/%3E%3Cpath d='M0,600 L0,420 Q200,360 400,400 T800,380 T1200,360 L1200,600 Z' fill='%230A192F' opacity='0.8'/%3E%3Cpath d='M0,600 L0,480 Q250,420 500,460 T1000,440 T1200,420 L1200,600 Z' fill='%231A3A5F' opacity='0.7'/%3E%3Cpath d='M0,600 L0,520 Q300,460 600,500 T1200,480 L1200,600 Z' fill='%232A5B8F' opacity='0.6'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: bottom center;
+            background-repeat: no-repeat;
+            z-index: 0;
+            pointer-events: none;
+            animation: mountainMove 120s linear infinite;
+        }
+
+        /* Mây nhẹ phía trên */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.15) 2px, transparent 2px),
+                radial-gradient(circle at 60% 20%, rgba(255, 255, 255, 0.12) 3px, transparent 3px),
+                radial-gradient(circle at 80% 35%, rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 300px 300px, 400px 400px, 350px 350px;
+            animation: cloudMove 80s linear infinite;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* Container cho sao */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s ease-in-out infinite;
+        }
+
+        .star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 1px;
+            background: white;
+            box-shadow: 0 0 2px white;
+        }
+
+        .star::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(90deg);
+            width: 100%;
+            height: 1px;
+            background: white;
+            box-shadow: 0 0 2px white;
+        }
+
+        .star.small {
+            width: 1px;
+            height: 1px;
+            animation: twinkleSlow 4s ease-in-out infinite;
+        }
+
+        .star.medium {
+            width: 2px;
+            height: 2px;
+            animation: twinkle 3s ease-in-out infinite;
+            animation-delay: 0.5s;
+        }
+
+        .star.large {
+            width: 3px;
+            height: 3px;
+            animation: twinkle 2.5s ease-in-out infinite;
+            animation-delay: 1s;
+            box-shadow: 0 0 3px white;
         }
 
         .register-container {
-            background: rgba(255, 255, 255, 0.92);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             padding: 40px 35px;
-            border-radius: 15px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            width: 400px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2),
+                        0 0 0 1px rgba(255, 255, 255, 0.5);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
             text-align: center;
+            animation: borderGlow 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .register-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.4), 
+                transparent);
+            animation: shine 3s infinite;
+            z-index: 0;
+        }
+
+        .register-container > * {
+            position: relative;
+            z-index: 1;
         }
 
         h2 {
-            color: #0078D7;
+            background: linear-gradient(135deg, #0078D7, #00BFFF, #0078D7);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite, float 3s ease-in-out infinite;
             margin-bottom: 25px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            position: relative;
+        }
+        
+        h2::first-letter {
+            display: inline-block;
+            animation: float 2s ease-in-out infinite;
         }
 
         label {
@@ -37,81 +279,322 @@
             color: #333;
         }
 
-        input {
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="date"] {
             width: 100%;
-            padding: 10px 12px;
+            padding: 12px 15px;
             margin-bottom: 18px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
             box-sizing: border-box;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            position: relative;
+        }
+
+        input[type="text"]:hover,
+        input[type="email"]:hover,
+        input[type="password"]:hover,
+        input[type="date"]:hover {
+            border-color: #0078D7;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 120, 215, 0.2);
+        }
+
+        input[type="text"]:not(:hover):not(:focus),
+        input[type="email"]:not(:hover):not(:focus),
+        input[type="password"]:not(:hover):not(:focus),
+        input[type="date"]:not(:hover):not(:focus) {
+            transform: translateY(0);
         }
 
         input:focus {
             border-color: #0078D7;
             outline: none;
-            box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            transform: translateY(-1px) scale(1.01);
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        input:not(:focus):not(:hover) {
+            transform: translateY(0) scale(1);
+            animation: none;
+        }
+
+        input::placeholder {
+            color: #999;
+            transition: opacity 0.3s ease;
+            animation: placeholder 2s ease-in-out infinite;
+        }
+
+        input:focus::placeholder {
+            opacity: 0.6;
+        }
+
+        input:invalid:not(:placeholder-shown) {
+            animation: shake 0.5s ease-in-out;
+            border-color: #dc3545;
+        }
+
+        input:valid:not(:placeholder-shown) {
+            border-color: #28a745;
         }
 
         button {
             width: 100%;
-            background-color: #0078D7;
+            background: linear-gradient(135deg, #0078D7, #00BFFF);
+            background-size: 200% 200%;
+            background-position: 0% 50%;
             border: none;
             color: white;
-            padding: 10px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            transition: background-color 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 120, 215, 0.3);
+            transform: translateY(0);
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         button:hover {
-            background-color: #005ea3;
+            background-position: 100% 50%;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 120, 215, 0.4);
+        }
+
+        button:not(:hover) {
+            transform: translateY(0);
+            background-position: 0% 50%;
+            animation: none;
+        }
+
+        button:active {
+            transform: translateY(-1px);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        button:disabled:hover {
+            transform: none;
+            animation: none;
+        }
+
+        .loading {
+            position: relative;
+            color: transparent;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: rotate 0.8s linear infinite;
         }
 
         .back-btn {
             margin-top: 15px;
-            background-color: #34a853;
+            background: linear-gradient(135deg, #34a853, #2c8e45);
+            background-size: 200% 200%;
+            background-position: 0% 50%;
         }
 
         .back-btn:hover {
-            background-color: #2c8e45;
+            background-position: 100% 50%;
+            box-shadow: 0 6px 20px rgba(52, 168, 83, 0.4);
+        }
+
+        .back-btn:not(:hover) {
+            background-position: 0% 50%;
+            transform: translateY(0);
         }
 
         small {
             display: block;
             margin-top: 20px;
             color: #555;
+            transition: opacity 0.3s ease;
+        }
+
+        small:hover {
+            opacity: 0.8;
+        }
+
+        /* Form validation icon */
+        .form-group {
+            position: relative;
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            right: 12px;
+            top: 38px;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .form-group:has(input:valid:not(:placeholder-shown))::after {
+            content: '✓';
+            color: #28a745;
+            opacity: 1;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 20px;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Container hover effect */
+        .register-container {
+            transition: all 0.3s ease;
+        }
+
+        .register-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        .register-container:not(:hover) {
+            transform: translateY(0);
+        }
+
+        /* Scrollbar styling */
+        .register-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .register-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .register-container::-webkit-scrollbar-thumb {
+            background: rgba(0, 120, 215, 0.3);
+            border-radius: 10px;
+        }
+
+        .register-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 120, 215, 0.5);
         }
     </style>
 </head>
 <body>
+<!-- Sao trên bầu trời -->
+<div class="stars">
+    <div class="star small" style="top: 10%; left: 15%;"></div>
+    <div class="star medium" style="top: 15%; left: 25%;"></div>
+    <div class="star small" style="top: 20%; left: 35%;"></div>
+    <div class="star large" style="top: 12%; left: 45%;"></div>
+    <div class="star small" style="top: 18%; left: 55%;"></div>
+    <div class="star medium" style="top: 22%; left: 65%;"></div>
+    <div class="star small" style="top: 14%; left: 75%;"></div>
+    <div class="star large" style="top: 19%; left: 85%;"></div>
+    <div class="star small" style="top: 25%; left: 20%;"></div>
+    <div class="star medium" style="top: 30%; left: 30%;"></div>
+    <div class="star small" style="top: 28%; left: 40%;"></div>
+    <div class="star large" style="top: 32%; left: 50%;"></div>
+    <div class="star small" style="top: 26%; left: 60%;"></div>
+    <div class="star medium" style="top: 35%; left: 70%;"></div>
+    <div class="star small" style="top: 29%; left: 80%;"></div>
+    <div class="star large" style="top: 33%; left: 90%;"></div>
+    <div class="star small" style="top: 8%; left: 50%;"></div>
+    <div class="star medium" style="top: 5%; left: 60%;"></div>
+    <div class="star small" style="top: 7%; left: 70%;"></div>
+    <div class="star large" style="top: 6%; left: 80%;"></div>
+    <div class="star small" style="top: 40%; left: 10%;"></div>
+    <div class="star medium" style="top: 38%; left: 20%;"></div>
+    <div class="star small" style="top: 42%; left: 30%;"></div>
+    <div class="star large" style="top: 36%; left: 40%;"></div>
+    <div class="star small" style="top: 44%; left: 50%;"></div>
+    <div class="star medium" style="top: 39%; left: 60%;"></div>
+    <div class="star small" style="top: 41%; left: 70%;"></div>
+    <div class="star large" style="top: 37%; left: 80%;"></div>
+    <div class="star small" style="top: 43%; left: 90%;"></div>
+    <div class="star medium" style="top: 3%; left: 10%;"></div>
+    <div class="star small" style="top: 4%; left: 25%;"></div>
+    <div class="star large" style="top: 2%; left: 40%;"></div>
+    <div class="star small" style="top: 5%; left: 55%;"></div>
+    <div class="star medium" style="top: 3%; left: 75%;"></div>
+    <div class="star small" style="top: 1%; left: 90%;"></div>
+</div>
+
 <div class="register-container">
     <h2>🛫 Create Your Account</h2>
 
     <!-- Form đăng ký -->
-    <form th:action="@{/register-success}" th:object="${user}" method="post">
+    <form th:action="@{/register-success}" th:object="${user}" method="post" id="registerForm" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" th:field="*{fullName}" placeholder="Enter your full name" required>
+        </div>
 
-        <label for="fullName">Full Name</label>
-        <input type="text" id="fullName" th:field="*{fullName}" placeholder="Enter your full name" required>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required>
+        </div>
 
-        <label for="email">Email</label>
-        <input type="email" id="email" th:field="*{email}" placeholder="Enter your email" required>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="Create a password" required>
+        </div>
 
-        <label for="password">Password</label>
-        <input type="password" id="password" th:field="*{password}" placeholder="Create a password" required>
+        <div class="form-group">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone" th:field="*{phone}" placeholder="Enter your phone number" required>
+        </div>
 
-        <label for="phone">Phone</label>
-        <input type="text" id="phone" th:field="*{phone}" placeholder="Enter your phone number" required>
+        <div class="form-group">
+            <label for="passportNumber">Passport Number</label>
+            <input type="text" id="passportNumber" th:field="*{passportNumber}" placeholder="Enter your passport number" required>
+        </div>
 
-        <label for="passportNumber">Passport Number</label>
-        <input type="text" id="passportNumber" th:field="*{passportNumber}" placeholder="Enter your passport number" required>
+        <div class="form-group">
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" required>
+        </div>
 
-        <label for="dateOfBirth">Date of Birth</label>
-        <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}" required>
-
-        <button type="submit">Register</button>
+        <button type="submit" id="registerBtn">Register</button>
     </form>
 
     <!-- Nút quay lại login -->
@@ -121,5 +604,77 @@
 
     <small>© 2025 SkyTicket Airlines</small>
 </div>
+
+<script>
+    // Handle form submission with loading state
+    function handleSubmit(event) {
+        const btn = document.getElementById('registerBtn');
+        btn.classList.add('loading');
+        btn.disabled = true;
+        
+        // Remove loading state after 3 seconds (in case of error)
+        setTimeout(() => {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+        }, 3000);
+    }
+
+    // Add focus animation to inputs
+    document.querySelectorAll('input').forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+    });
+
+    // Add ripple effect to buttons
+    document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+</script>
+
+<style>
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        transform: scale(0);
+        animation: ripple-animation 0.6s ease-out;
+        pointer-events: none;
+    }
+
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+
+    .form-group.focused label {
+        color: #0078D7;
+        transform: translateX(2px);
+        transition: all 0.3s ease;
+    }
+</style>
 </body>
 </html>
