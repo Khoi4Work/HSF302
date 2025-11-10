@@ -9,7 +9,6 @@ import sum25.se.entity.*;
 import sum25.se.entity.Plane;
 
 
-import sum25.se.repository.IFlightSchedulePlaneRepository;
 import sum25.se.service.*;
 
 import java.time.LocalDate;
@@ -50,7 +49,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setPhone("0123456789");
             admin.setPassportNumber("VN0000001");
             admin.setDateOfBirth(LocalDate.of(1990, 1, 1)); // 1990-01-01
-            admin.setRoleUses(RoleUsers.ADMIN);
+            admin.setRoleUser(RoleUsers.ADMIN);
 
             Users demoUser = new Users();
             demoUser.setFullName("Demo User");
@@ -59,7 +58,7 @@ public class DataInitializer implements CommandLineRunner {
             demoUser.setPhone("0987654321");
             demoUser.setPassportNumber("VN0000002");
             demoUser.setDateOfBirth(LocalDate.of(1995, 5, 15)); // 1995-05-15
-            demoUser.setRoleUses(RoleUsers.USER);
+            demoUser.setRoleUser(RoleUsers.USER);
 
             iUsersService.createUser(admin);
             iUsersService.createUser(demoUser);

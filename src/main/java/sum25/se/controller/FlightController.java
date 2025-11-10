@@ -45,6 +45,6 @@ public class FlightController {
         model.addAttribute("date", date);
         model.addAttribute("seatClass", seatClass);
 
-        return "mainPage"; // Tên file Thymeleaf, ví dụ: flightList.html
+        return "mainPage";
     }
 }

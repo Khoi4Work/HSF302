@@ -8,17 +8,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import sum25.se.entity.FlightSchedule_Plane;
-import sum25.se.entity.Plane;
-import sum25.se.entity.FlightSchedule;
-import sum25.se.entity.Users;
+import sum25.se.entity.*;
 import sum25.se.service.*;
 
 import java.util.List;
 
 @Controller
 @RequestMapping("/schedule")
-public class ScheduleController {
+public class AdminController {
     @Autowired
     IFlightSchedulePlaneService iFlightSchedulePlaneService;
     @Autowired
@@ -58,6 +55,11 @@ public class ScheduleController {
     @GetMapping("/addSchedule")
     public ModelAndView addNewSchedule(HttpSession httpSession) {
         Users user = (Users) httpSession.getAttribute("LoggedIn");
+        if(user == null){
+            return new ModelAndView("redirect:/main");
+        } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
+            return new ModelAndView("redirect:/login");
+        }
         ModelAndView modelAndView = new ModelAndView();
 
         if (user == null) {
@@ -83,8 +85,9 @@ public class ScheduleController {
                                  @RequestParam("planeId") int planeId,
                                  @RequestParam("scheduleId") int scheduleId) {
         Users user = (Users) httpSession.getAttribute("LoggedIn");
-
-        if (user == null) {
+        if(user == null){
+            return "redirect:/main";
+        } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
             return "redirect:/login";
         }
 
@@ -113,8 +116,10 @@ public class ScheduleController {
         ModelAndView modelAndView = new ModelAndView();
 
         if (user == null) {
-            modelAndView.setViewName("redirect:/login");
+            modelAndView.setViewName("redirect:/main");
             return modelAndView;
+        } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
+            return new ModelAndView("403");
         }
 
         List<Plane> planes = iFlightService.getAllFlights();
@@ -136,9 +141,10 @@ public class ScheduleController {
                                @RequestParam("planeId") int planeId,
                                @RequestParam("scheduleId") int scheduleId) {
         Users user = (Users) httpSession.getAttribute("LoggedIn");
-
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/main";
+        } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
+            return "403";
         }
 
         if (bindingResult.hasErrors()) {

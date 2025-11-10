@@ -37,7 +37,7 @@ public class UsersServiceImpl implements IUsersService {
                     existing.setPhone(updatedUser.getPhone());
                     existing.setPassportNumber(updatedUser.getPassportNumber());
                     existing.setDateOfBirth(updatedUser.getDateOfBirth());
-                    existing.setRoleUses(updatedUser.getRoleUses());
+                    existing.setRoleUser(updatedUser.getRoleUser());
                     return iUsersRepository.save(existing);
                 })
                 .orElseThrow(() -> new RuntimeException("User not found with id " + id));

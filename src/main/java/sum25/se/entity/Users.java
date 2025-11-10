@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -25,7 +24,7 @@ public class Users {
     String passportNumber;
     LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)
-    RoleUsers roleUses = RoleUsers.USER;
+    RoleUsers roleUser = RoleUsers.USER;
     @OneToMany(mappedBy = "users")
     List<Booking> bookings;
 

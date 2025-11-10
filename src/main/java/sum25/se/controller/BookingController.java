@@ -38,10 +38,10 @@ public class BookingController {
     public String showBookingForm(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/main";
         }
         model.addAttribute("flights", iFlightService.getAllFlights());
-        return "booking_form"; // → resources/templates/booking_form.html
+        return "booking_form";
     }
 
     // Xử lý khi người dùng submit form
@@ -57,7 +57,7 @@ public class BookingController {
         // Kiểm tra user đăng nhập
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/main";
         }
         
         // Lấy Plane từ flightId

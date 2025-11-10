@@ -1,11 +1,8 @@
 package sum25.se.controller;
 
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -80,7 +77,9 @@ public class LoginController {
     }
 
     @PostMapping("/process")
-    public String processLogin(HttpSession session, @RequestParam String email, @RequestParam String password) {
+    public String processLogin(HttpSession session,
+                               @RequestParam String email,
+                               @RequestParam String password) {
         Users user = iUsersService.login(email, password);
         if (user == null) {
             return "redirect:/error";
@@ -88,7 +87,7 @@ public class LoginController {
 
         System.out.println(email + "-" + password);
         session.setAttribute("LoggedIn", user);
-        if (user.getRoleUses() == RoleUsers.ADMIN) {
+        if (user.getRoleUser() == RoleUsers.ADMIN) {
             return "redirect:/schedule/admin";
         }
         return "redirect:/mainPage";
