@@ -78,19 +78,22 @@ public class AdminController {
     }
 
     @PostMapping("/addSchedule")
-    public String addNewSchedule(@Valid @ModelAttribute("schedule") FlightSchedule_Plane schedule,
-                                 BindingResult bindingResult,
-                                 HttpSession httpSession,
-                                 Model model,
-                                 @RequestParam("planeId") int planeId,
-                                 @RequestParam("scheduleId") int scheduleId) {
+    public String addNewSchedule(
+            @Valid @ModelAttribute("schedule") FlightSchedule_Plane schedule,
+            BindingResult bindingResult,
+            HttpSession httpSession,
+            Model model,
+            @RequestParam("planeId") int planeId,
+            @RequestParam("scheduleId") int scheduleId) {
+
         Users user = (Users) httpSession.getAttribute("LoggedIn");
-        if(user == null){
+        if (user == null) {
             return "redirect:/main";
         } else if (!user.getRoleUser().equals(RoleUsers.ADMIN)) {
             return "redirect:/login";
         }
 
+        // Nếu có lỗi validate cơ bản (null, format sai, v.v.)
         if (bindingResult.hasErrors()) {
             List<Plane> planes = iFlightService.getAllFlights();
             List<FlightSchedule> flightSchedules = iFlightScheduleService.getAllSchedules();
@@ -98,6 +101,19 @@ public class AdminController {
             model.addAttribute("flightSchedules", flightSchedules);
             model.addAttribute("schedule", schedule);
             return "addSchedule";
+        }
+
+        // ✅ Kiểm tra logic: giờ cất cánh < giờ hạ cánh
+        if (schedule.getTakeOffTime() != null && schedule.getLandTime() != null) {
+            if (!schedule.getTakeOffTime().isBefore(schedule.getLandTime())) {
+                List<Plane> planes = iFlightService.getAllFlights();
+                List<FlightSchedule> flightSchedules = iFlightScheduleService.getAllSchedules();
+                model.addAttribute("planes", planes);
+                model.addAttribute("flightSchedules", flightSchedules);
+                model.addAttribute("schedule", schedule);
+                model.addAttribute("timeError", "⛔ Thời gian cất cánh phải trước thời gian hạ cánh!");
+                return "addSchedule";
+            }
         }
 
         Plane plane = iFlightService.getFlightById(planeId);
@@ -109,6 +125,7 @@ public class AdminController {
         iFlightSchedulePlaneService.add(schedule);
         return "redirect:/schedule/admin";
     }
+
 
     @GetMapping("/editSchedule/{id}")
     public ModelAndView editSchedule(HttpSession httpSession, @PathVariable int id) {
