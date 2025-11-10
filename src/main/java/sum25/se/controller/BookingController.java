@@ -94,7 +94,7 @@ public class BookingController {
     public String showUserBookings(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
         if (user == null) {
-            return "redirect:/login";
+            return "redirect:/main";
         }
 
         // Lấy danh sách booking của user đang đăng nhập
@@ -109,7 +109,7 @@ public class BookingController {
         try {
             Users user = (Users) session.getAttribute("LoggedIn");
             if (user == null) {
-                return "redirect:/login";
+                return "redirect:/main";
             }
 
             // Lấy booking
