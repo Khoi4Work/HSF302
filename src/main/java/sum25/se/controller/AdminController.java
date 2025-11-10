@@ -33,6 +33,14 @@ public class AdminController {
             return modelAndView;
         }
 
+        // Kiểm tra nếu vừa login thành công
+        Boolean loginSuccess = (Boolean) httpSession.getAttribute("loginSuccess");
+        if (loginSuccess != null && loginSuccess) {
+            modelAndView.addObject("loginSuccess", true);
+            modelAndView.addObject("user", users);
+            httpSession.removeAttribute("loginSuccess"); // Xóa sau khi đã hiển thị
+        }
+
         List<FlightSchedule_Plane> schedules = iFlightSchedulePlaneService.findAll();
         modelAndView.addObject("schedules", schedules);
         modelAndView.setViewName("admin");
@@ -61,11 +69,6 @@ public class AdminController {
             return new ModelAndView("redirect:/login");
         }
         ModelAndView modelAndView = new ModelAndView();
-
-        if (user == null) {
-            modelAndView.setViewName("redirect:/login");
-            return modelAndView;
-        }
 
         List<Plane> planes = iFlightService.getAllFlights();
         List<FlightSchedule> flightSchedules = iFlightScheduleService.getAllSchedules();
