@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Cập nhật thông tin đặt vé</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 4px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 15px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .price-display {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 18px;
+        }
+
+        .info-display {
+            background-color: #e9ecef;
+            padding: 8px;
+            border-radius: 5px;
+            margin-top: 4px;
+            color: #666;
+        }
+
+        .error-message {
+            color: #dc3545;
+            background-color: #f8d7da;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+<body>
+<header><h1>SkyTicket Booking</h1></header>
+<main>
+    <h2>Cập nhật thông tin đặt vé</h2>
+
+    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+
+    <form th:action="@{'/booking/edit/' + ${booking.bookingId}}" method="post" id="bookingEditForm">
+        <!-- Thông tin không thể thay đổi -->
+        <label>Mã đặt vé (Booking ID):</label>
+        <div class="info-display" th:text="${booking.bookingId}"></div>
+
+        <label>Mã hành khách (Passenger ID):</label>
+        <div class="info-display" th:text="${passengerInfo.passengerId ?: 'N/A'}"></div>
+
+        <!-- Thông tin có thể cập nhật -->
+        <label>Tên hành khách:</label>
+        <input type="text" name="fullName" id="fullName" 
+               th:value="${passengerInfo.fullName}" 
+               placeholder="Nhập tên hành khách" required />
+
+        <label>Giới tính:</label>
+        <select name="gender" id="gender">
+            <option value="">-- Chọn giới tính --</option>
+            <option value="Male" th:selected="${passengerInfo.gender == 'Male'}">Nam</option>
+            <option value="Female" th:selected="${passengerInfo.gender == 'Female'}">Nữ</option>
+            <option value="Other" th:selected="${passengerInfo.gender == 'Other'}">Khác</option>
+        </select>
+
+        <label>Số hộ chiếu:</label>
+        <input type="text" name="passportNumber" id="passportNumber" 
+               th:value="${passengerInfo.passportNumber}" 
+               placeholder="Nhập số hộ chiếu" />
+
+        <label>Ngày sinh:</label>
+        <input type="date" name="dateOfBirth" id="dateOfBirth" 
+               th:value="${passengerInfo.dateOfBirth != null ? #temporals.format(passengerInfo.dateOfBirth, 'yyyy-MM-dd') : ''}" />
+
+        <label>Chuyến bay:</label>
+        <div class="info-display" th:text="${booking.plane != null ? booking.plane.planeModel : 'N/A'}"></div>
+
+        <label>Hạng ghế:</label>
+        <div class="info-display" th:text="${booking.seatClass ?: 'N/A'}"></div>
+
+        <label>Tổng giá:</label>
+        <div class="info-display" 
+             th:text="|${#numbers.formatInteger(booking.totalPrice, 0, 'COMMA')} VND|">0 VND</div>
+
+        <button type="submit">Cập nhật thông tin</button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center;">
+        <a th:href="@{/booking/list}" style="display: inline-block; margin-right: 10px; color: #007bff; text-decoration: none;">← Quay lại danh sách vé</a>
+    </div>
+</main>
+
+<script>
+    // Validate form trước khi submit
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('bookingEditForm').addEventListener('submit', function(e) {
+            const fullName = document.getElementById('fullName').value.trim();
+            
+            if (!fullName) {
+                e.preventDefault();
+                alert('Vui lòng nhập tên hành khách!');
+                return false;
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>
+

@@ -73,6 +73,17 @@
         a:hover {
             text-decoration: underline;
         }
+
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .price-display {
+            font-weight: bold;
+            color: #007bff;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -80,22 +91,26 @@
 <main>
     <h2>Form Đặt Vé</h2>
 
-    <form th:action="@{/booking/create}" th:object="${booking}" method="post">
-        <label>Người dùng:</label>
-        <select th:field="*{users.userId}">
-            <option th:each="u : ${users}" th:value="${u.userId}" th:text="${u.fullName}"></option>
-        </select>
+    <form th:action="@{/booking/create}" method="post" id="bookingForm">
+        <label>Tên hành khách:</label>
+        <input type="text" name="passengerName" id="passengerName" placeholder="Nhập tên hành khách" required />
 
         <label>Chuyến bay:</label>
-        <select th:field="*{plane.flightId}">
+        <select name="flightId" id="flightSelect" required>
+            <option value="">-- Chọn chuyến bay --</option>
             <option th:each="f : ${flights}" th:value="${f.flightId}" th:text="${f.planeModel}"></option>
         </select>
 
         <label>Hạng ghế:</label>
-        <input type="text" th:field="*{seatClass}" />
+        <select name="seatClass" id="seatClassSelect" required>
+            <option value="">-- Chọn hạng ghế --</option>
+            <option value="Economy">Economy</option>
+            <option value="Business">Business</option>
+        </select>
 
         <label>Tổng giá:</label>
-        <input type="number" th:field="*{totalPrice}" />
+        <input type="number" name="totalPrice" id="totalPrice" readonly />
+        <div id="priceDisplay" class="price-display" style="margin-top: 5px;"></div>
 
         <button type="submit">Đặt vé</button>
     </form>
@@ -103,5 +118,76 @@
 
     <a th:href="@{/booking/list}">← Quay lại danh sách đặt vé</a>
 </main>
+
+<script>
+    // Bảng giá theo hạng ghế
+    const prices = {
+        'Economy': 1500000,
+        'Business': 3000000
+    };
+
+    // Hàm định dạng số với dấu phẩy
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") + ' VND';
+    }
+
+    // Hàm cập nhật giá khi chọn hạng ghế
+    function updatePrice() {
+        const seatClassSelect = document.getElementById('seatClassSelect');
+        const totalPriceInput = document.getElementById('totalPrice');
+        const priceDisplay = document.getElementById('priceDisplay');
+        
+        const selectedSeatClass = seatClassSelect.value;
+        
+        if (selectedSeatClass && prices[selectedSeatClass]) {
+            const price = prices[selectedSeatClass];
+            // Set giá vào input field (sẽ được submit với form)
+            totalPriceInput.value = price;
+            // Hiển thị giá đã format cho người dùng xem
+            priceDisplay.textContent = formatPrice(price);
+            priceDisplay.style.display = 'block';
+        } else {
+            totalPriceInput.value = '';
+            priceDisplay.textContent = '';
+            priceDisplay.style.display = 'none';
+        }
+    }
+
+    // Chờ DOM load xong
+    document.addEventListener('DOMContentLoaded', function() {
+        const seatClassSelect = document.getElementById('seatClassSelect');
+        const totalPriceInput = document.getElementById('totalPrice');
+        
+        // Lắng nghe sự kiện thay đổi hạng ghế
+        seatClassSelect.addEventListener('change', updatePrice);
+        
+        // Nếu đã có giá trị seatClass (từ server), tự động cập nhật giá
+        if (seatClassSelect.value) {
+            updatePrice();
+        }
+        
+        // Validate form trước khi submit
+        document.getElementById('bookingForm').addEventListener('submit', function(e) {
+            const passengerName = document.getElementById('passengerName').value.trim();
+            const flightSelect = document.getElementById('flightSelect');
+            
+            if (!passengerName) {
+                e.preventDefault();
+                alert('Vui lòng nhập tên hành khách!');
+                return false;
+            }
+            if (!flightSelect.value) {
+                e.preventDefault();
+                alert('Vui lòng chọn chuyến bay!');
+                return false;
+            }
+            if (!seatClassSelect.value || !totalPriceInput.value) {
+                e.preventDefault();
+                alert('Vui lòng chọn hạng ghế!');
+                return false;
+            }
+        });
+    });
+</script>
 </body>
 </html>

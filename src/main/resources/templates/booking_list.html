@@ -66,37 +66,138 @@
         a.button:hover {
             background-color: #0056b3;
         }
+
+        .status-pending {
+            background-color: #ffc107;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            background-color: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .status-declined {
+            background-color: #dc3545;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .btn-cancel {
+            background-color: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #c82333;
+        }
+
+        .btn-cancel:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-edit {
+            background-color: #28a745;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin-right: 5px;
+        }
+
+        .btn-edit:hover {
+            background-color: #218838;
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 <header><h1>SkyTicket Booking</h1></header>
 <main>
-    <h2>Danh sách đặt vé</h2>
+    <h2>Danh sách vé đã đặt</h2>
 
-    <table>
+    <div th:if="${bookings == null or bookings.isEmpty()}" class="empty-message">
+        <p>Bạn chưa có vé nào được đặt.</p>
+        <a class="button" th:href="@{/booking/create}">Đặt vé ngay</a>
+    </div>
+
+    <table th:if="${bookings != null and !bookings.isEmpty()}">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Người dùng</th>
+            <th>Tên hành khách</th>
             <th>Chuyến bay</th>
             <th>Hạng ghế</th>
             <th>Tổng giá</th>
             <th>Trạng thái</th>
+            <th>Hành động</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="b : ${bookings}">
             <td th:text="${b.bookingId}"></td>
-            <td th:text="${b.users.fullName}"></td>
-            <td th:text="${b.flight.planeModel}"></td>
-            <td th:text="${b.seatClass}"></td>
-            <td th:text="${b.totalPrice}"></td>
-            <td th:text="${b.status}"></td>
+            <td th:text="${b.passengerInfos != null && !b.passengerInfos.isEmpty() ? b.passengerInfos[0].fullName : 'N/A'}"></td>
+            <td th:text="${b.plane?.planeModel ?: 'N/A'}"></td>
+            <td th:text="${b.seatClass ?: 'N/A'}"></td>
+            <td th:text="|${#numbers.formatInteger(b.totalPrice, 0, 'COMMA')} VND|">0 VND</td>
+            <td>
+                <span th:if="${b.status != null}">
+                    <span th:switch="${b.status.toString()}" th:remove="tag">
+                        <span th:case="'PENDING'" class="status-pending">Đang chờ</span>
+                        <span th:case="'COMPLETED'" class="status-completed">Hoàn thành</span>
+                        <span th:case="'DECLINED'" class="status-declined">Đã hủy</span>
+                        <span th:case="*" th:text="${b.status}"></span>
+                    </span>
+                </span>
+                <span th:if="${b.status == null}">N/A</span>
+            </td>
+            <td>
+                <a th:if="${b.status != null and b.status.toString() == 'PENDING'}" 
+                   th:href="@{'/booking/edit/' + ${b.bookingId}}"
+                   class="btn-edit">
+                    Cập nhật
+                </a>
+                <a th:if="${b.status != null and b.status.toString() == 'PENDING'}" 
+                   th:href="@{'/booking/cancel/' + ${b.bookingId}}"
+                   class="btn-cancel"
+                   onclick="return confirm('Bạn có chắc chắn muốn hủy vé này?');">
+                    Hủy vé
+                </a>
+                <span th:if="${b.status == null or b.status.toString() != 'PENDING'}" style="color: #999;">-</span>
+            </td>
         </tr>
         </tbody>
     </table>
 
-    <a class="button" th:href="@{/booking/create}">+ Tạo booking mới</a>
+    <div style="margin-top: 20px;">
+        <a class="button" th:href="@{/booking/create}">+ Đặt vé mới</a>
+        <a class="button" th:href="@{/mainPage}" style="margin-left: 10px; background-color: #6c757d;">← Quay lại</a>
+    </div>
 </main>
 </body>
 </html>

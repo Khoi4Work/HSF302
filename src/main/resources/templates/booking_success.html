@@ -24,32 +24,70 @@
             background-color: white;
             border-radius: 10px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 30px;
+            padding: 40px;
             text-align: center;
+        }
+
+        .success-icon {
+            font-size: 64px;
+            color: #28a745;
+            margin-bottom: 20px;
         }
 
         h2 {
             color: #28a745;
+            margin-bottom: 15px;
         }
 
-        a {
+        .message {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .link-container {
+            margin-top: 30px;
+        }
+
+        a.button {
             display: inline-block;
-            margin-top: 20px;
-            color: #007bff;
+            background-color: #007bff;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
             text-decoration: none;
             font-weight: bold;
+            margin: 10px;
+            transition: background-color 0.3s;
         }
 
-        a:hover {
-            text-decoration: underline;
+        a.button:hover {
+            background-color: #0056b3;
+        }
+
+        a.button-secondary {
+            background-color: #6c757d;
+        }
+
+        a.button-secondary:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
 <body>
 <header><h1>SkyTicket Booking</h1></header>
 <main>
-    <h2 th:text="${message}"></h2>
-    <a th:href="@{/booking/list}">Xem danh sách đặt vé →</a>
+    <div class="success-icon">✓</div>
+    <h2>Đặt vé thành công!</h2>
+    <div class="message">
+        <p>Vé của bạn đã được đặt thành công.</p>
+        <p>Bạn có thể xem danh sách vé đã đặt tại đây.</p>
+    </div>
+    <div class="link-container">
+        <a class="button" th:href="@{/booking/list}">Xem danh sách vé đã đặt</a>
+        <a class="button button-secondary" th:href="@{/booking/create}">Đặt vé mới</a>
+    </div>
 </main>
 </body>
 </html>

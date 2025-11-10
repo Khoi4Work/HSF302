@@ -329,7 +329,7 @@
                     <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
                     <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
                     <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                    <td class="num" th:text="${#numbers.formatDecimal(flight.flightSchedule.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">1,500,000 VND</td>
+                    <td class="num">1,500,000 VND</td>
                     <td>
                         <span th:switch="${flight.plane.status}">
                             <span th:case="'Scheduled'" class="status-badge status-scheduled" th:text="${flight.plane.status}">Scheduled</span>

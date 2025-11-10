@@ -24,12 +24,21 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
+    public List<Booking> getBookingsByUser(Users user) {
+        return iBookingRepository.findByUsers(user);
+    }
+
+    @Override
     public Booking getBookingById(Integer id) {
         return iBookingRepository.getBookingByBookingId(id);
     }
 
     @Override
     public Booking createBooking(Booking booking) {
+        // Tự động set ngày đặt vé nếu chưa có
+        if (booking.getBookingDate() == null || booking.getBookingDate().isEmpty()) {
+            booking.setBookingDate(LocalDateTime.now().toString());
+        }
         return iBookingRepository.save(booking);
     }
 
@@ -42,12 +51,13 @@ public class BookingServiceImpl implements IBookingService {
         existing.setTotalPrice(booking.getTotalPrice());
         existing.setSeatClass(booking.getSeatClass());
         existing.setUsers(booking.getUsers());
-//        existing.setFlight(booking.getPlane());
+        existing.setPlane(booking.getPlane());
         return iBookingRepository.save(existing);
     }
 
     @Override
     public void deleteBooking(Integer id) {
+        // Xóa booking, PassengerInfo sẽ tự động bị xóa do cascade
         iBookingRepository.deleteById(id);
     }
 

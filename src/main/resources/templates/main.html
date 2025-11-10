@@ -48,7 +48,6 @@
                     <option value="" th:selected="${seatClass == null or seatClass == ''}">Tất cả</option>
                     <option value="Economy" th:selected="${seatClass == 'Economy'}">Economy</option>
                     <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
-                    <option value="First" th:selected="${seatClass == 'First'}">First Class</option>
                 </select>
             </div>
 
@@ -99,8 +98,7 @@
                     <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
                     <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
                     <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                    <td class="num"
-                        th:text="${#numbers.formatDecimal(flight.flightSchedule.price, 0, 'COMMA', 0, 'POINT')} + ' VND'">
+                    <td class="num">
                         1,500,000 VND
                     </td>
                     <td>
@@ -137,7 +135,7 @@
     <h1>Chào mừng đến với SkyTicket!</h1>
     <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
 
-    <a th:href="@{/booking/create}" class="btn">Bắt đầu đặt vé ngay</a>
+
 </main>
 
 <footer>

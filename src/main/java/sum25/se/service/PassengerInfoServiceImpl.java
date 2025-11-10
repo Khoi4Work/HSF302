@@ -31,12 +31,16 @@ public class PassengerInfoServiceImpl implements IPassengerInfoService {
     @Override
     public PassengerInfo updatePassenger(Integer id, PassengerInfo passenger) {
         PassengerInfo existing = getPassengerById(id);
+        if (existing == null) {
+            throw new RuntimeException("PassengerInfo not found with id: " + id);
+        }
 
         existing.setGender(passenger.getGender());
         existing.setFullName(passenger.getFullName());
         existing.setPassportNumber(passenger.getPassportNumber());
         existing.setDateOfBirth(passenger.getDateOfBirth());
-        existing.setBooking(passenger.getBooking());
+        // Không cập nhật booking để tránh lỗi circular reference
+        // existing.setBooking(passenger.getBooking());
 
         return iPassengerInfoRepository.save(existing);
     }

@@ -24,14 +24,14 @@ public class Booking {
     String seatClass;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
     Users users;
-    @OneToMany(mappedBy = "booking")
+    @OneToMany(mappedBy = "booking", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<PassengerInfo> passengerInfos;
     @OneToMany(mappedBy = "booking")
     List<Payment> payments;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "flightId")
     Plane plane;
 
