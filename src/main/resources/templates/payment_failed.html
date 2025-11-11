@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Thanh toán thất bại</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #007bff;
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .failed-icon {
+            font-size: 80px;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .message {
+            font-size: 18px;
+            color: #495057;
+            margin-bottom: 30px;
+        }
+
+        .error-info {
+            background-color: #f8d7da;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+            color: #721c24;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            margin: 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+<header><h1>SkyTicket Booking</h1></header>
+<main>
+    <div class="failed-icon">❌</div>
+    <h2>Thanh toán thất bại!</h2>
+    <p class="message">Giao dịch của bạn không thành công.</p>
+
+    <div class="error-info" th:if="${error}">
+        <strong>Lỗi:</strong>
+        <p th:text="${error}"></p>
+        <p th:if="${responseCode}">
+            Mã lỗi: <span th:text="${responseCode}"></span>
+        </p>
+    </div>
+
+    <div>
+        <a th:href="@{/booking/list}" class="btn btn-primary">Quay lại danh sách vé</a>
+        <a th:href="@{/mainPage}" class="btn btn-secondary">Về trang chủ</a>
+    </div>
+</main>
+</body>
+</html>

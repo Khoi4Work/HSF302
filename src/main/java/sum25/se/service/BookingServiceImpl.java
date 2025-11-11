@@ -83,4 +83,43 @@ public class BookingServiceImpl implements IBookingService {
         return iBookingRepository.save(booking);
     }
 
+    @Override
+    public Booking updatePassengerInfoAndGetBooking(Integer bookingId, String fullName,
+                                                    String gender, String passportNumber,
+                                                    String dateOfBirthStr,
+                                                    IPassengerInfoService passengerInfoService) {
+
+        Booking booking = iBookingRepository.findById(bookingId).orElseThrow(() -> new RuntimeException("Booking not found"));
+        PassengerInfo passengerInfo = null;
+        if (booking.getPassengerInfos() != null && !booking.getPassengerInfos().isEmpty()) {
+            passengerInfo = booking.getPassengerInfos().get(0);
+        } else {
+            passengerInfo = new PassengerInfo();
+            passengerInfo.setBooking(booking);
+        }
+        passengerInfo.setFullName(fullName);
+        passengerInfo.setGender(gender);
+        passengerInfo.setPassportNumber(passportNumber);
+
+        if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
+            try {
+                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
+                java.util.Date dateOfBirth = sdf.parse(dateOfBirthStr);
+                passengerInfo.setDateOfBirth(dateOfBirth);
+            } catch (Exception e) {
+                System.out.println(" Không parse được ngày sinh: " + e.getMessage());
+            }
+        }
+        if (passengerInfo.getPassengerId() != null) {
+            passengerInfoService.updatePassenger(passengerInfo.getPassengerId(), passengerInfo);
+            System.out.println(" Đã cập nhật PassengerInfo ID: " + passengerInfo.getPassengerId());
+        } else {
+            PassengerInfo saved = passengerInfoService.createPassenger(passengerInfo);
+            System.out.println(" Đã tạo mới PassengerInfo ID: " + saved.getPassengerId());
+        }
+        return iBookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found after update"));
+
+    }
 }
+

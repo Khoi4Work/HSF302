@@ -13,6 +13,7 @@ import sum25.se.entity.*;
 import sum25.se.service.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/booking")
@@ -26,6 +27,8 @@ public class BookingController {
     IPassengerInfoService iPassengerInfoService;
     @Autowired
     private IFlightSchedulePlaneService iFlightSchedulePlaneService;
+    @Autowired
+    VNPayService vnPayService;
 
     @GetMapping("/create")
     public String showBookingForm(@RequestParam(required = false) Integer flightId,
@@ -306,4 +309,112 @@ public class BookingController {
         iBookingService.deleteBooking(id);
         return "redirect:/booking/list";
     }
+
+    @PostMapping("/update-and-payment/{id}")
+    public String updateAndPayment(
+            @PathVariable Integer id,
+            @RequestParam("fullName") String fullName,
+            @RequestParam(value = "gender", required = false) String gender,
+            @RequestParam(value = "passportNumber", required = false) String passportNumber,
+            @RequestParam(value = "dateOfBirth", required = false) String dateOfBirthStr,
+            HttpSession session,
+            Model model) {
+
+        Users user = (Users) session.getAttribute("LoggedIn");
+        if (user == null) {
+            return "redirect:/login";
+        }
+        Booking booking = iBookingService.getBookingById(id);
+        if (booking.getStatus() != null && !booking.getStatus().toString().equals("PENDING")) {
+            model.addAttribute("error", "Vé này đã được thanh toán hoặc đã bị hủy!");
+            return "redirect:/booking/list";
+        }
+        if (!booking.getUsers().getUserId().equals(user.getUserId())) {
+            model.addAttribute("error", "Bạn không có quyền thực hiện hành động này!");
+            return "redirect:/booking/list";
+        }
+        try {
+            Booking updatedBooking = iBookingService.updatePassengerInfoAndGetBooking(
+                    id,
+                    fullName,
+                    gender,
+                    passportNumber,
+                    dateOfBirthStr,
+                    iPassengerInfoService
+            );
+            String paymentUrl = vnPayService.createPaymentUrl(updatedBooking);
+            System.out.println("🔗 Payment URL: " + paymentUrl);
+            return "redirect:" + paymentUrl;
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error","Có lỗi xảy ra: " + e.getMessage());
+
+            model.addAttribute("booking", booking);
+            PassengerInfo errorPassengerInfo = booking.getPassengerInfos() != null &&
+                    !booking.getPassengerInfos().isEmpty()
+                    ? booking.getPassengerInfos().get(0)
+                    : new PassengerInfo();
+            if (errorPassengerInfo.getPassengerId() == null) {
+                errorPassengerInfo.setBooking(booking);
+            }
+            model.addAttribute("passengerInfo", errorPassengerInfo);
+            return "booking_edit";
+        }
+    }
+    @GetMapping("/payment-return")
+    public String paymentReturn(@RequestParam Map<String, String> allParams,
+                                HttpSession session,
+                                Model model) {
+        try {
+            System.out.println("📥 VNPay callback received");
+
+            boolean isValid = vnPayService.validateCallback(allParams);
+
+            if (!isValid) {
+                System.out.println(" Invalid signature from VNPay");
+                model.addAttribute("error", "Chữ ký không hợp lệ!");
+                return "payment_failed";
+            }
+
+            String vnpResponseCode = allParams.get("vnp_ResponseCode");
+            String vnpTransactionStatus = allParams.get("vnp_TransactionStatus");
+
+            System.out.println("📊 Response Code: " + vnpResponseCode);
+            System.out.println("📊 Transaction Status: " + vnpTransactionStatus);
+
+            if ("00".equals(vnpResponseCode) && "00".equals(vnpTransactionStatus)) {
+                String txnRef = allParams.get("vnp_TxnRef");
+                Integer bookingId = Integer.parseInt(txnRef.split("_")[0]);
+
+                System.out.println("✅ Payment successful for Booking ID: " + bookingId);
+
+                Booking booking = iBookingService.getBookingById(bookingId);
+                if (booking != null) {
+                    booking.setStatus(StatusBooking.COMPLETED);
+                    iBookingService.updateBooking(bookingId, booking);
+
+                    System.out.println("✅ Booking status updated to COMPLETED");
+
+                    model.addAttribute("message", "Thanh toán thành công!");
+                    model.addAttribute("booking", booking);
+                    return "payment_success";
+                } else {
+                    System.out.println(" Booking not found: " + bookingId);
+                    model.addAttribute("error", "Không tìm thấy đơn đặt vé!");
+                    return "payment_failed";
+                }
+            } else {
+                System.out.println(" Payment failed with code: " + vnpResponseCode);
+                model.addAttribute("error", "Giao dịch thất bại hoặc đã bị hủy!");
+                model.addAttribute("responseCode", vnpResponseCode);
+                return "payment_failed";
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("❌ Error processing payment callback: " + e.getMessage());
+            model.addAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            return "payment_failed";
+        }
+    }
+
 }

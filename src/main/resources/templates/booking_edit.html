@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Cập nhật thông tin đặt vé</title>
+    <title>Cập nhật thông tin & Thanh toán</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -23,107 +23,239 @@
             margin: 30px auto;
             background-color: white;
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
         }
 
         h2 {
             text-align: center;
             color: #333;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+            margin-top: 15px;
             font-weight: bold;
+            color: #333;
+        }
+
+        .required {
+            color: red;
         }
 
         input, select {
             width: 100%;
-            padding: 8px;
-            margin-top: 4px;
+            padding: 10px;
+            margin-top: 5px;
             border-radius: 5px;
             border: 1px solid #ccc;
             box-sizing: border-box;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .info-section {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #007bff;
+        }
+
+        .info-section h3 {
+            margin: 0 0 10px 0;
+            color: #007bff;
+            font-size: 16px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #495057;
+        }
+
+        .info-value {
+            color: #212529;
+        }
+
+        .total-amount {
+            background-color: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .total-amount .label {
+            font-size: 14px;
+            color: #155724;
+            margin-bottom: 5px;
+        }
+
+        .total-amount .amount {
+            font-size: 28px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        .vnpay-logo {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .vnpay-logo img {
+            max-width: 150px;
+        }
+
+        .info-note {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 12px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .info-note ul {
+            margin: 8px 0 0 0;
+            padding-left: 20px;
+        }
+
+        .info-note li {
+            margin: 5px 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
         }
 
         button {
-            margin-top: 15px;
-            width: 100%;
-            background-color: #007bff;
-            color: white;
+            flex: 1;
             border: none;
-            padding: 10px;
+            padding: 14px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 10px;
-            color: #007bff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        input[readonly] {
-            background-color: #f0f0f0;
-            cursor: not-allowed;
-        }
-
-        .price-display {
             font-weight: bold;
-            color: #007bff;
-            font-size: 18px;
+            transition: all 0.3s;
         }
 
-        .info-display {
-            background-color: #e9ecef;
-            padding: 8px;
-            border-radius: 5px;
-            margin-top: 4px;
-            color: #666;
+        .btn-payment {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-payment:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
         }
 
         .error-message {
-            color: #dc3545;
+            color: #721c24;
             background-color: #f8d7da;
-            padding: 10px;
+            padding: 12px;
             border-radius: 5px;
             margin-bottom: 15px;
+            border-left: 4px solid #dc3545;
         }
 
+        .success-message {
+            color: #155724;
+            background-color: #d4edda;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #28a745;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
 <header><h1>SkyTicket Booking</h1></header>
 <main>
-    <h2>Cập nhật thông tin đặt vé</h2>
+    <h2>Cập nhật thông tin & Thanh toán</h2>
+    <p class="subtitle">Vui lòng điền đầy đủ thông tin hành khách trước khi thanh toán</p>
 
+    <div th:if="${success}" class="success-message" th:text="${success}"></div>
     <div th:if="${error}" class="error-message" th:text="${error}"></div>
 
-    <form th:action="@{'/booking/edit/' + ${booking.bookingId}}" method="post" id="bookingEditForm">
-        <!-- Thông tin không thể thay đổi -->
-        <label>Mã đặt vé (Booking ID):</label>
-        <div class="info-display" th:text="${booking.bookingId}"></div>
+    <form th:action="@{'/booking/update-and-payment/' + ${booking.bookingId}}"
+          method="post"
+          id="bookingPaymentForm">
 
-        <label>Mã hành khách (Passenger ID):</label>
-        <div class="info-display" th:text="${passengerInfo.passengerId ?: 'N/A'}"></div>
+        <div class="info-section">
+            <h3>📋 Thông tin đặt vé</h3>
+            <div class="info-row">
+                <span class="info-label">Mã đặt vé:</span>
+                <span class="info-value" th:text="${booking.bookingId}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Chuyến bay:</span>
+                <span class="info-value" th:text="${booking.plane != null ? booking.plane.planeModel : 'N/A'}"></span>
+            </div>
+            <div class="info-row">
+                <span class="info-label">Hạng ghế:</span>
+                <span class="info-value" th:text="${booking.seatClass ?: 'N/A'}"></span>
+            </div>
+        </div>
 
-        <!-- Thông tin có thể cập nhật -->
-        <label for="fullName">Tên hành khách:</label>
-        <input type="text" name="fullName" id="fullName" 
-               th:value="${passengerInfo.fullName}" 
-               placeholder="Nhập tên hành khách" required />
+        <h3 style="color: #007bff; margin-top: 25px;">👤 Thông tin hành khách</h3>
+
+        <label for="fullName">Họ và tên: <span class="required">*</span></label>
+        <input type="text"
+               name="fullName"
+               id="fullName"
+               th:value="${passengerInfo.fullName}"
+               placeholder="Ví dụ: Nguyễn Văn A"
+               required/>
 
         <label for="gender">Giới tính:</label>
         <select name="gender" id="gender">
@@ -133,49 +265,71 @@
             <option value="Other" th:selected="${passengerInfo.gender == 'Other'}">Khác</option>
         </select>
 
-        <label for="passportNumber">Số hộ chiếu:</label>
-        <input type="text" name="passportNumber" id="passportNumber" 
-               th:value="${passengerInfo.passportNumber}" 
-               placeholder="Nhập số hộ chiếu" />
+        <label for="passportNumber">Số hộ chiếu / CCCD:</label>
+        <input type="text"
+               name="passportNumber"
+               id="passportNumber"
+               th:value="${passengerInfo.passportNumber}"
+               placeholder="Nhập số hộ chiếu hoặc CCCD"/>
 
         <label for="dateOfBirth">Ngày sinh:</label>
-        <input type="date" name="dateOfBirth" id="dateOfBirth" 
-               th:value="${passengerInfo.dateOfBirth != null ? #temporals.format(passengerInfo.dateOfBirth, 'yyyy-MM-dd') : ''}" />
+        <input type="date"
+               name="dateOfBirth"
+               id="dateOfBirth"
+               th:value="${passengerInfo.dateOfBirth != null ? passengerInfo.dateOfBirth : ''}"
+        />
 
-        <label>Chuyến bay:</label>
-        <div class="info-display" th:text="${booking.plane != null ? booking.plane.planeModel : 'N/A'}"></div>
+        <div class="total-amount">
+            <div class="label">Tổng số tiền thanh toán</div>
+            <div class="amount" th:text="|${#numbers.formatInteger(booking.totalPrice, 0, 'COMMA')} VND|">0 VND</div>
+        </div>
 
-        <label>Hạng ghế:</label>
-        <div class="info-display" th:text="${booking.seatClass ?: 'N/A'}"></div>
+        <div class="vnpay-logo">
+            <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/9/06ncktiwd6dc1694418196384.png" alt="VNPay Logo">
+        </div>
 
-        <label>Tổng giá:</label>
-        <div class="info-display" 
-             th:text="|${#numbers.formatInteger(booking.totalPrice, 0, 'COMMA')} VND|">0 VND</div>
+        <div class="info-note">
+            <strong>⚠️ Lưu ý quan trọng:</strong>
+            <ul>
+                <li>Vui lòng kiểm tra kỹ thông tin trước khi thanh toán</li>
+                <li>Sau khi thanh toán thành công, bạn không thể chỉnh sửa hoặc hủy vé</li>
+                <li>Thông tin hành khách sẽ được lưu và cập nhật trước khi chuyển đến VNPay</li>
+            </ul>
+        </div>
 
-        <button type="submit">Cập nhật thông tin</button>
+        <div class="button-group">
+            <button type="submit" class="btn-payment">
+                💳 Cập nhật & Thanh toán qua VNPay
+            </button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='/booking/list'">
+                ❌ Hủy
+            </button>
+        </div>
     </form>
 
-    <div style="margin-top: 20px; text-align: center;">
-        <a th:href="@{/booking/list}" style="display: inline-block; margin-right: 10px; color: #007bff; text-decoration: none;">← Quay lại danh sách vé</a>
-    </div>
+    <a href="/booking/list" class="back-link">← Quay lại danh sách vé</a>
 </main>
 
 <script>
-    // Validate form trước khi submit
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('bookingEditForm').addEventListener('submit', function(e) {
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('bookingPaymentForm');
+
+        form.addEventListener('submit', function (e) {
             const fullName = document.getElementById('fullName').value.trim();
-            
+
             if (!fullName) {
                 e.preventDefault();
-                alert('Vui lòng nhập tên hành khách!');
+                alert('Vui lòng nhập họ tên hành khách!');
+                return false;
+            }
+
+            // Confirm trước khi submit
+            if (!confirm('Bạn đã kiểm tra kỹ thông tin và đồng ý thanh toán vé này?')) {
+                e.preventDefault();
                 return false;
             }
         });
-
     });
-
 </script>
 </body>
 </html>
-
