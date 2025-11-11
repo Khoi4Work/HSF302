@@ -1,9 +1,11 @@
 package sum25.se.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import sum25.se.entity.FlightSchedule_Plane;
@@ -44,8 +46,11 @@ public class LoginController {
     }
 
     @PostMapping("/register-success")
-    public String showRegisterSuccess(Users user) {
-        System.out.println(user);
+    public String showRegisterSuccess(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("user", user);
+            return "register";
+        }
         iUsersService.createUser(user);
         return "redirect:/login";
     }
