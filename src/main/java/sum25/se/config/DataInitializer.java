@@ -67,24 +67,19 @@ public class DataInitializer implements CommandLineRunner {
         } else {
             System.out.println("ℹ️ Users already exist — skipping initialization.");
         }
-        if (airportService.getAllAirports().isEmpty()) {
-            Airport tsn = new Airport();
-            tsn.setAirportName("Sân bay Tân Sơn Nhất");
-            tsn.setCode("SGN");
-            tsn.setLocation("Hồ Chí Minh, Việt Nam");
-            tsn = airportService.addAirport(tsn);
+        Airport tsn = createAndSaveAirport("Sân bay Tân Sơn Nhất", "SGN", "TP. Hồ Chí Minh", airportService);
+        Airport nba = createAndSaveAirport("Sân bay Nội Bài", "HAN", "Hà Nội", airportService);
+        Airport dad = createAndSaveAirport("Sân bay Đà Nẵng", "DAD", "Đà Nẵng", airportService);
 
-            Airport nba = new Airport();
-            nba.setAirportName("Sân bay Nội Bài");
-            nba.setCode("HAN");
-            nba.setLocation("Hà Nội, Việt Nam");
-            nba = airportService.addAirport(nba);
-
-            Airport dad = new Airport();
-            dad.setAirportName("Sân bay Đà Nẵng");
-            dad.setCode("DAD");
-            dad.setLocation("Đà Nẵng, Việt Nam");
-            dad = airportService.addAirport(dad);
+            Airport cxr = createAndSaveAirport("Sân bay Cam Ranh", "CXR", "Khánh Hòa", airportService);
+            Airport pqc = createAndSaveAirport("Sân bay Phú Quốc", "PQC", "Kiên Giang", airportService);
+            Airport vdo = createAndSaveAirport("Sân bay Vân Đồn", "VDO", "Quảng Ninh", airportService);
+            Airport hph = createAndSaveAirport("Sân bay Cát Bi", "HPH", "Hải Phòng", airportService);
+            Airport vii = createAndSaveAirport("Sân bay Vinh", "VII", "Nghệ An", airportService);
+            Airport hui = createAndSaveAirport("Sân bay Phú Bài", "HUI", "Thừa Thiên Huế", airportService);
+            Airport vca = createAndSaveAirport("Sân bay Cần Thơ", "VCA", "Cần Thơ", airportService);
+            Airport dli = createAndSaveAirport("Sân bay Liên Khương", "DLI", "Lâm Đồng", airportService);
+            Airport bmv = createAndSaveAirport("Sân bay Buôn Ma Thuột", "BMV", "Đắk Lắk", airportService);
 
 
             FlightSchedule econSeatTemplate = new FlightSchedule();
@@ -227,7 +222,65 @@ public class DataInitializer implements CommandLineRunner {
             link7.setLandTime(vna_HAN_SGN.getDepartureTime().plusMinutes(vna_HAN_SGN.getDuration()));
             iFlightSchedulePlaneService.add(link7);
 
+        // 7. VietJet Air: SGN -> PQC
+        Plane vjet_SGN_PQC = createAndSavePlane("VietJet Air", tsn, 5, 0, 75, flightService);
+        // 8. Vietnam Airlines: HAN -> CXR
+        Plane vna_HAN_CXR = createAndSavePlane("Vietnam Airlines", nba, 7, 0, 110, flightService);
+        // 9. Bamboo Airways: VDO -> SGN
+        Plane bamboo_VDO_SGN = createAndSavePlane("Bamboo Airways", vdo, 9, 30, 150, flightService);
+        // 10. Pacific Airlines: DAD -> HPH
+        Plane pacific_DAD_HPH = createAndSavePlane("Pacific Airlines", dad, 12, 45, 95, flightService);
+        // 11. Vietravel Airlines: SGN -> VCA
+        Plane vietravel_SGN_VCA = createAndSavePlane("Vietravel Airlines", tsn, 15, 15, 60, flightService);
+        // 12. VietJet Air: VII -> DLI
+        Plane vjet_VII_DLI = createAndSavePlane("VietJet Air", vii, 18, 0, 105, flightService);
+
+
+        // --- THÊM 6 LIÊN KẾT CHUYẾN BAY MỚI (FlightSchedule_Plane) ---
+
+        // 7. VJ SGN->PQC Economy
+        createAndSaveFlightLink(vjet_SGN_PQC, econSeatTemplate, "SGN", "PQC", iFlightSchedulePlaneService);
+        // 8. VNA HAN->CXR Business
+        createAndSaveFlightLink(vna_HAN_CXR, bizSeatTemplate, "HAN", "CXR", iFlightSchedulePlaneService);
+        // 9. QH VDO->SGN Economy
+        createAndSaveFlightLink(bamboo_VDO_SGN, econSeatTemplate, "VDO", "SGN", iFlightSchedulePlaneService);
+        // 10. BL DAD->HPH Economy
+        createAndSaveFlightLink(pacific_DAD_HPH, econSeatTemplate, "DAD", "HPH", iFlightSchedulePlaneService);
+        // 11. VU SGN->VCA Business
+        createAndSaveFlightLink(vietravel_SGN_VCA, bizSeatTemplate, "SGN", "VCA", iFlightSchedulePlaneService);
+        // 12. VJ VII->DLI Economy
+        createAndSaveFlightLink(vjet_VII_DLI, econSeatTemplate, "VII", "DLI", iFlightSchedulePlaneService);
+
             System.out.println("✅ Default data for new entities initialized successfully!");
         }
+
+    private Airport createAndSaveAirport(String name, String code, String location, IAirportService service) {
+        Airport airport = new Airport();
+        airport.setAirportName(name);
+        airport.setCode(code);
+        airport.setLocation(location);
+        return service.addAirport(airport);
+    }
+
+    private Plane createAndSavePlane(String model, Airport departureAirport, int hour, int minute, int duration, IFlightService service) {
+        Plane plane = new Plane();
+        plane.setPlaneModel(model);
+        plane.setDepartureTime(LocalDateTime.now().plusDays(1).withHour(hour).withMinute(minute));
+        plane.setDuration(duration);
+        plane.setStatus("Scheduled");
+        plane.setAirport(departureAirport);
+        return service.addFlight(plane);
+    }
+
+    private void createAndSaveFlightLink(Plane plane, FlightSchedule schedule, String takeOffCode, String landCode, IFlightSchedulePlaneService service) {
+        FlightSchedule_Plane link = new FlightSchedule_Plane();
+        link.setPlane(plane);
+        link.setFlightSchedule(schedule);
+        link.setTakeOff(takeOffCode);
+        link.setLand(landCode);
+        link.setTakeOffTime(plane.getDepartureTime());
+        link.setLandTime(plane.getDepartureTime().plusMinutes(plane.getDuration()));
+        service.add(link);
     }
 }
+

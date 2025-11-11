@@ -12,6 +12,7 @@ import sum25.se.entity.FlightSchedule_Plane;
 import sum25.se.entity.RoleUsers;
 import sum25.se.entity.StatusUsers;
 import sum25.se.entity.Users;
+import sum25.se.service.IAirportService;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IUsersService;
 
@@ -23,10 +24,13 @@ public class LoginController {
     private IUsersService iUsersService;
     @Autowired
     private IFlightSchedulePlaneService iFlightSchedulePlaneService;
+    @Autowired
+    private IAirportService iAirportService;
 
     @GetMapping("/")
     public String mainPage(Model model) {
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
+        model.addAttribute("airports", iAirportService.getAllAirports());
         model.addAttribute("flights", flightList);
         return "main";
     }
@@ -58,6 +62,7 @@ public class LoginController {
     @GetMapping("/main")
     public String showMain(Model model) {
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
+        model.addAttribute("airports", iAirportService.getAllAirports());
         model.addAttribute("flights", flightList);
         return "main";
     }
@@ -78,6 +83,7 @@ public class LoginController {
         }
 
         model.addAttribute("user", user);
+        model.addAttribute("airports", iAirportService.getAllAirports());
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
         model.addAttribute("flights", flightList);
         return "mainPage";

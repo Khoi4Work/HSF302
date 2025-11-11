@@ -21,17 +21,27 @@
 
 <main>
     <div class="search-section">
-        <form th:action="@{/login}" method="get" class="search-form">
+        <form th:action="@{/flight/search}" method="get" class="search-form" id="searchForm">
             <div class="form-group">
                 <label for="departure">Điểm đi:</label>
-                <input type="text" id="departure" name="departure"
-                       th:value="${departure}" placeholder="Ví dụ: SGN" required>
+                <select id="departure" name="departure" class="form-control" th:value="${departure}" required>
+                    <option value="">Chọn điểm đi</option>
+                    <option th:each="airport : ${airports}"
+                            th:value="${airport.code}"
+                            th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                            th:selected="${airport.code == departure}"></option>
+                </select>
             </div>
 
             <div class="form-group">
                 <label for="destination">Điểm đến:</label>
-                <input type="text" id="destination" name="destination"
-                       th:value="${destination}" placeholder="Ví dụ: HAN" required>
+                <select id="destination" name="destination" class="form-control" th:value="${destination}" required>
+                    <option value="">Chọn điểm đến</option>
+                    <option th:each="airport : ${airports}"
+                            th:value="${airport.code}"
+                            th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                            th:selected="${airport.code == destination}"></option>
+                </select>
             </div>
 
             <div class="form-group">
@@ -39,8 +49,6 @@
                 <input type="date" id="date" name="date"
                        th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
             </div>
-
-
 
             <div class="form-group">
                 <label for="seatClass">Hạng ghế:</label>
@@ -50,6 +58,7 @@
                     <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
                 </select>
             </div>
+
 
             <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
         </form>
@@ -142,7 +151,42 @@
     <p>© 2025 SkyTicket. All rights reserved.</p>
 </footer>
 
+<script>
+    // Tự động đóng thông báo sau 5 giây
+    const notification = document.getElementById('successNotification');
+    if (notification) {
+        setTimeout(() => {
+            closeNotification();
+        }, 5000);
+    }
 
+    function closeNotification() {
+        const notification = document.getElementById('successNotification');
+        if (notification) {
+            notification.classList.add('hide');
+            setTimeout(() => {
+                notification.remove();
+            }, 500);
+        }
+    }
+
+    // Logic kiểm tra Điểm đi và Điểm đến không trùng nhau
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', function(event) {
+                const departure = document.getElementById('departure').value;
+                const destination = document.getElementById('destination').value;
+
+                if (departure && destination && departure === destination) {
+                    event.preventDefault(); // Ngăn chặn form gửi đi
+                    alert('Điểm đi và Điểm đến không được trùng nhau. Vui lòng chọn lại.');
+                }
+            });
+        }
+    });
+</script>
 
 </body>
 </html>

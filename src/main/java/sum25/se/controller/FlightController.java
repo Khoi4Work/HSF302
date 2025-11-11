@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import sum25.se.entity.FlightSchedule_Plane;
+import sum25.se.service.IAirportService;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IFlightService;
 
@@ -19,6 +20,8 @@ public class FlightController {
     IFlightSchedulePlaneService iFlightSchedulePlaneService;
     @Autowired
     private IFlightService iFlightService;
+    @Autowired
+    private IAirportService iAirportService;
 
     @GetMapping("/flights")
     public String showFlightList(Model model) {
@@ -44,6 +47,7 @@ public class FlightController {
         model.addAttribute("destination", destination);
         model.addAttribute("date", date);
         model.addAttribute("seatClass", seatClass);
+        model.addAttribute("airports", iAirportService.getAllAirports());
 
         return "mainPage";
     }
