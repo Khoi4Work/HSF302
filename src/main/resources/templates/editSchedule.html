@@ -46,9 +46,9 @@
         </div>
 
         <div class="form-group">
-            <label for="plane">Máy bay</label>
+            <label for="plane">Hãng bay</label>
             <select id="plane" name="planeId">
-                <option value="">-- Chọn máy bay --</option>
+                <option value="">-- Chọn hãng bay --</option>
                 <option th:each="plane : ${planes}"
                         th:value="${plane.flightId}"
                         th:text="${plane.planeModel}"
