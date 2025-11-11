@@ -66,11 +66,10 @@ public class LoginController {
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
 
-        // Kiểm tra nếu vừa login thành công
         Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
         if (loginSuccess != null && loginSuccess) {
             model.addAttribute("loginSuccess", true);
-            session.removeAttribute("loginSuccess"); // Xóa sau khi đã hiển thị
+            session.removeAttribute("loginSuccess");
         }
 
         model.addAttribute("user", user);
@@ -84,27 +83,26 @@ public class LoginController {
         return "redirect:/schedule/admin";
     }
 
-    @PostMapping("/process")
+    @PostMapping("/processLogin")
     public String processLogin(HttpSession session,
                                @RequestParam String email,
                                @RequestParam String password,
                                Model model) {
         Users user = iUsersService.login(email, password);
+        
         if (user == null) {
-            return "redirect:/error";
+            model.addAttribute("error","Invalid Email or number password"  );
+            return "login";
         }
-//        else if (user.getStatus().equals(StatusUsers.INACTIVE)) {
-//            return "";
-//        }
-
-
-        System.out.println(email + "-" + password);
+        
         session.setAttribute("LoggedIn", user);
         session.setAttribute("loginSuccess", true);
+        
         if (user.getRoleUser() == RoleUsers.ADMIN) {
             return "redirect:/schedule/admin";
+        } else {
+            return "redirect:/mainPage";
         }
-        return "redirect:/mainPage";
     }
 
     @GetMapping("/logout")

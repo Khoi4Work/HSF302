@@ -587,19 +587,18 @@
 
 <div class="login-container">
     <h2>✈️ Flight Booking Login</h2>
-    <form th:action="@{/process}" method="post" id="loginForm" onsubmit="handleSubmit(event)">
+    <form th:action="@{/processLogin}" method="post" id="loginForm" onsubmit="handleSubmit(event)">
         <div class="form-group">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" placeholder="Enter your email" required>
         </div>
-
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
         </div>
-
         <button type="submit" id="loginBtn">Login</button>
     </form>
+    <h4 th:if="${error}" th:text="${error}" style="color: red"></h4>
 
     <form th:action="@{/register}">
         <button type="submit" class="register-btn">Create Account</button>
