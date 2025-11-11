@@ -15,7 +15,9 @@ public class PassengerInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer passengerId;
+    @Column(columnDefinition = "NVARCHAR(10)")
     String gender;
+    @Column(columnDefinition = "NVARCHAR(100)")
     String fullName;
     String passportNumber;
     Date dateOfBirth;

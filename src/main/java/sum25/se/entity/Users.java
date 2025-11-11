@@ -16,7 +16,7 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer userId;
-
+    @Column(columnDefinition = "NVARCHAR(100)")
     String fullName;
     String email;
     String password;

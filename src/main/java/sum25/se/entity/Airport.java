@@ -15,8 +15,10 @@ public class Airport {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer airportId;
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String airportName;
     private String code;
+    @Column(columnDefinition = "NVARCHAR(100)")
     private String location;
     @OneToMany(mappedBy = "airport")
     private List<Plane> planes;
