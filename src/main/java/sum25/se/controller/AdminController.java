@@ -58,6 +58,7 @@ public class AdminController {
 
         List<FlightSchedule_Plane> schedules = iFlightSchedulePlaneService.findAll();
         modelAndView.addObject("schedules", schedules);
+        modelAndView.addObject("user", user);
         modelAndView.setViewName("admin");
         return modelAndView;
     }
