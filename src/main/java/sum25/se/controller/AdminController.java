@@ -47,7 +47,7 @@ public class AdminController {
             return modelAndView;
         }
 
-
+        System.out.println(user.getFullName());
         modelAndView.addObject("admin", user);
 
         Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
