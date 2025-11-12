@@ -91,6 +91,7 @@ public class LoginController {
 
     @GetMapping("/main")
     public String showMain(Model model) {
+        System.out.println("reset find");
         List<FlightSchedule_Plane> flightList = iFlightSchedulePlaneService.findAll();
         model.addAttribute("airports", iAirportService.getAllAirports());
         model.addAttribute("flights", flightList);
@@ -105,6 +106,9 @@ public class LoginController {
     @GetMapping("/mainPage")
     public String showMainPage(Model model, HttpSession session) {
         Users user = (Users) session.getAttribute("LoggedIn");
+        if (user == null) {
+            return "redirect:/main";
+        }
 
         Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
         if (loginSuccess != null && loginSuccess) {

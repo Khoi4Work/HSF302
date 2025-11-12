@@ -1,9 +1,6 @@
 package sum25.se.service;
 
-import sum25.se.entity.Booking;
-import sum25.se.entity.PassengerInfo;
-import sum25.se.entity.Plane;
-import sum25.se.entity.Users;
+import sum25.se.entity.*;
 
 import java.util.List;
 
@@ -17,7 +14,7 @@ public interface IBookingService {
     Booking createBooking(String seatClass,
                           Integer totalPrice,
                           Users user,
-                          Plane plane);
+                          FlightSchedule_Plane schedule_plane);
 
     Booking updateBooking(Integer id, Booking booking);
 

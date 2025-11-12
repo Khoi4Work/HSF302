@@ -24,6 +24,9 @@ public class FlightSchedule_Plane {
     @ManyToOne
     @JoinColumn(name = "scheduleId")
     private FlightSchedule flightSchedule;
+    @OneToOne
+    @JoinColumn()
+    private Booking booking;
     private String takeOff;
     private String land;
     private LocalDateTime takeOffTime;

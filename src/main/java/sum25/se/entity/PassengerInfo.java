@@ -26,6 +26,8 @@ public class PassengerInfo {
     String fullName;
     String passportNumber;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     LocalDate dateOfBirth;
 
     @ManyToOne

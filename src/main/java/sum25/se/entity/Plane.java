@@ -22,13 +22,12 @@ public class Plane {
     private int duration;
     // save duration in minutes
     String status;
-    @OneToMany(mappedBy = "plane")
-    private List<Booking> bookings;
+//    @OneToMany(mappedBy = "plane")
+//    private List<Booking> bookings;
     @ManyToOne
     @JoinColumn(name = "airportId")
     private Airport airport;
-    //    @OneToMany(mappedBy = "flight")
-//    private List<FlightSchedule> flightSchedules;
+
     @OneToMany(mappedBy = "plane")
     List<FlightSchedule_Plane> flightSchedulePlane;
 

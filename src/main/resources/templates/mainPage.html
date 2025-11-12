@@ -115,6 +115,7 @@
             background: rgba(255, 255, 255, 0.3);
             transform: rotate(90deg);
         }
+
     </style>
 </head>
 <body>
@@ -126,7 +127,7 @@
         <div class="success-title">🎉 Đăng nhập thành công!</div>
         <div class="success-message">
             <span th:if="${user != null and user.fullName != null}" th:text="'Chúc mừng bạn ' + ${user.fullName} + '!'">Chúc mừng bạn!</span>
-           
+
         </div>
     </div>
     <button class="success-close" onclick="closeNotification()">×</button>
@@ -143,7 +144,6 @@
     <a th:href="@{/booking/list}">Danh sách vé</a>
     <a th:href="@{/logout}">Đăng xuất</a>
 </nav>
-
 
 
 <main>
@@ -187,8 +187,10 @@
                 </select>
             </div>
 
-            <input name="page" id="page" type="hidden" th:value="2" >
+            <input name="page" id="page" type="hidden" th:value="2">
             <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
+            <a id="link" th:href="@{/main}" class="btn btn-secondary">Tất cả chuyến bay</a>
+
         </form>
     </div>
 
@@ -200,40 +202,40 @@
     </div>
 
 
-        <div class="table-card">
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Hãng hàng không</th>
-                        <th>Sân bay đi</th>
-                        <th>Điểm cất cánh</th>
-                        <th>Điểm hạ cánh</th>
-                        <th>Ngày cất cánh</th>
-                        <th>Giờ cất cánh</th>
-                        <th>Ngày hạ cánh</th>
-                        <th>Giờ hạ cánh</th>
-                        <th>Loại ghế</th>
-                        <th>Số ghế</th>
-                        <th>Giá vé</th>
-                        <th>Trạng thái</th>
-                        <th>Đặt lịch</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="flight : ${flights}">
-                        <td th:text="${flight.plane.planeModel}">Airbus A321</td>
-                        <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
-                        <td th:text="${flight.takeOff}">SGN</td>
-                        <td th:text="${flight.land}">HAN</td>
-                        <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                        <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
-                        <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                        <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
-                        <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
-                        <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                        <td class="num" th:text="${flight.flightSchedule.price}"></td>
-                        <td>
+    <div class="table-card">
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                <tr>
+                    <th>Hãng hàng không</th>
+                    <th>Sân bay đi</th>
+                    <th>Điểm cất cánh</th>
+                    <th>Điểm hạ cánh</th>
+                    <th>Ngày cất cánh</th>
+                    <th>Giờ cất cánh</th>
+                    <th>Ngày hạ cánh</th>
+                    <th>Giờ hạ cánh</th>
+                    <th>Loại ghế</th>
+                    <th>Số ghế</th>
+                    <th>Giá vé</th>
+                    <th>Trạng thái</th>
+                    <th>Đặt lịch</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="flight : ${flights}">
+                    <td th:text="${flight.plane.planeModel}">Airbus A321</td>
+                    <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
+                    <td th:text="${flight.takeOff}">SGN</td>
+                    <td th:text="${flight.land}">HAN</td>
+                    <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
+                    <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                    <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
+                    <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
+                    <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
+                    <td class="num" th:text="${flight.flightSchedule.price}"></td>
+                    <td>
                         <span th:switch="${flight.plane.status}">
                             <span th:case="'Scheduled'" class="status-badge status-scheduled"
                                   th:text="${flight.plane.status}">Scheduled</span>
@@ -244,29 +246,29 @@
                             <span th:case="*" class="status-badge status-cancelled" th:text="${flight.plane.status}">Cancelled</span>
                         </span>
 
-                        </td>
-                        <td>
-                            <form th:action="@{/booking/create}">
-                                <input type="hidden" name="flightId" th:value="${flight.flightPlaneId}" />
-                                <button type="submit">Đặt vé ngay</button>
-                            </form>
-                        </td>
+                    </td>
+                    <td>
+                        <form th:action="@{/booking/create}">
+                            <input type="hidden" name="flightId" th:value="${flight.flightPlaneId}"/>
+                            <button type="submit">Đặt vé ngay</button>
+                        </form>
+                    </td>
 
-                    </tr>
+                </tr>
 
-                    <tr th:if="${flights == null or flights.isEmpty()}">
-                        <td colspan="12">
-                            <div class="empty-state">
-                                <div class="empty-state-icon">📭</div>
-                                <p>Không có lịch bay nào.</p>
-                                <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                <tr th:if="${flights == null or flights.isEmpty()}">
+                    <td colspan="12">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📭</div>
+                            <p>Không có lịch bay nào.</p>
+                            <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
 
     <h1>Chào mừng đến với SkyTicket!</h1>
     <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
@@ -298,11 +300,11 @@
     }
 
     // Logic kiểm tra Điểm đi và Điểm đến không trùng nhau
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const searchForm = document.getElementById('searchForm');
 
         if (searchForm) {
-            searchForm.addEventListener('submit', function(event) {
+            searchForm.addEventListener('submit', function (event) {
                 const departure = document.getElementById('departure').value;
                 const destination = document.getElementById('destination').value;
 

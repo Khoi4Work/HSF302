@@ -162,7 +162,7 @@
         <tr th:each="b : ${bookings}">
             <td th:text="${b.bookingId}"></td>
             <td th:text="${b.passengerInfos != null && !b.passengerInfos.isEmpty() ? b.passengerInfos[0].fullName : 'N/A'}"></td>
-            <td th:text="${b.plane?.planeModel ?: 'N/A'}"></td>
+            <td th:text="${b.schedule_plane?.plane?.planeModel ?: 'N/A'}"></td>
             <td th:text="${b.seatClass ?: 'N/A'}"></td>
             <td th:text="|${#numbers.formatInteger(b.totalPrice, 0, 'COMMA')} VND|">0 VND</td>
             <td>

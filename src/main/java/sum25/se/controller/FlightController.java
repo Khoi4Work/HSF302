@@ -1,5 +1,6 @@
 package sum25.se.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -7,6 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import sum25.se.entity.FlightSchedule_Plane;
+import sum25.se.entity.RoleUsers;
+import sum25.se.entity.Users;
 import sum25.se.service.IAirportService;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IFlightService;
@@ -39,7 +42,20 @@ public class FlightController {
                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                    @RequestParam(value = "seatClass", required = false) String seatClass,
                                    @RequestParam("page") Integer page,
+                                   HttpSession session,
                                    Model model) {
+
+        Users user = (Users) session.getAttribute("LoggedIn");
+        if (page != 3){
+            if (user==null){
+                return "redirect:/main";
+            }
+            if (user.getRoleUser() == RoleUsers.ADMIN) {
+                model.addAttribute("admin", user);
+            }else {
+                model.addAttribute("user", user);
+            }
+        }
 
         List<FlightSchedule_Plane> flights = iFlightService.searchFlights(departure, destination, date, seatClass);
 
@@ -49,6 +65,8 @@ public class FlightController {
         model.addAttribute("date", date);
         model.addAttribute("seatClass", seatClass);
         model.addAttribute("airports", iAirportService.getAllAirports());
+
+
 
         return switch (page) {
             case 1 -> "admin";

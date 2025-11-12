@@ -2,10 +2,7 @@ package sum25.se.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sum25.se.entity.Booking;
-import sum25.se.entity.Plane;
-import sum25.se.entity.PassengerInfo;
-import sum25.se.entity.Users;
+import sum25.se.entity.*;
 import sum25.se.repository.IBookingRepository;
 
 import java.time.LocalDate;
@@ -38,10 +35,10 @@ public class BookingServiceImpl implements IBookingService {
     public Booking createBooking(String seatClass,
                                  Integer totalPrice,
                                  Users user,
-                                 Plane plane) {
+                                 FlightSchedule_Plane schedule_plane) {
         // Tạo Booking với user đang đăng nhập
         Booking booking = new Booking();
-        booking.setPlane(plane);
+        booking.setSchedule_plane(schedule_plane);
         booking.setSeatClass(seatClass);
         booking.setTotalPrice(totalPrice);
         booking.setUsers(user); // Gán user đang đăng nhập
@@ -61,7 +58,7 @@ public class BookingServiceImpl implements IBookingService {
         existing.setTotalPrice(booking.getTotalPrice());
         existing.setSeatClass(booking.getSeatClass());
         existing.setUsers(booking.getUsers());
-        existing.setPlane(booking.getPlane());
+        existing.setSchedule_plane(booking.getSchedule_plane());
         return iBookingRepository.save(existing);
     }
 

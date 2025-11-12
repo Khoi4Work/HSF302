@@ -31,8 +31,8 @@ public class Booking {
     List<PassengerInfo> passengerInfos;
     @OneToMany(mappedBy = "booking")
     List<Payment> payments;
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "flightId")
-    Plane plane;
+    @OneToOne
+    @JoinColumn(name = "schedule_plane")
+    FlightSchedule_Plane schedule_plane;
 
 }

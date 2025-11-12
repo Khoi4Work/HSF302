@@ -19,9 +19,7 @@ public class FlightSchedule {
     private String seatClass;
     private double price;
     private String status;
-    //    @ManyToOne
-//    @JoinColumn(name = "flightId")
-//    private Plane plane;
+
     @OneToMany(mappedBy = "flightSchedule")
     List<FlightSchedule_Plane> flightSchedulePlane;
 

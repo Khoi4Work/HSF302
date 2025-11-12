@@ -75,13 +75,14 @@ public class BookingController {
             return "booking_form";
         }
 
+        FlightSchedule_Plane schedule_plane = iFlightSchedulePlaneService.findById(flightId);
 
         // Lưu Booking trước
         Booking savedBooking = iBookingService.createBooking(
                 seatClass,
                 totalPrice,
                 user,
-                plane
+                schedule_plane
         );
 
         // Tạo PassengerInfo với tên hành khách
@@ -234,6 +235,7 @@ public class BookingController {
             passengerInfo = new PassengerInfo();
             passengerInfo.setBooking(booking);
         }
+
 
         passengerInfo.setFullName(fullName);
         passengerInfo.setGender(gender);
