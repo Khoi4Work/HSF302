@@ -13,7 +13,7 @@
     <div class="success-content">
         <div class="success-title">🎉 Đăng nhập thành công!</div>
         <div class="success-message">
-            <span th:if="${admin != null and admin.fullName != null}" th:text="'Chúc mừng bạn ' + ${user.fullName} + '!'">Chúc mừng bạn!</span>
+            <span th:if="${admin != null and admin.fullName != null}" th:text="'Chúc mừng bạn ' + ${admin.fullName} + '!'">Chúc mừng bạn!</span>
             <span th:if="${admin == null or admin.fullName == null}">Chúc mừng bạn!</span>
         </div>
     </div>
