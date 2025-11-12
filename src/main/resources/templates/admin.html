@@ -13,7 +13,8 @@
     <div class="success-content">
         <div class="success-title">🎉 Đăng nhập thành công!</div>
         <div class="success-message">
-            <span th:if="${admin != null and admin.fullName != null}" th:text="'Chúc mừng bạn ' + ${admin.fullName} + '!'">Chúc mừng bạn!</span>
+            <span th:if="${admin != null and admin.fullName != null}"
+                  th:text="'Chúc mừng bạn ' + ${admin.fullName} + '!'">Chúc mừng bạn!</span>
             <span th:if="${admin == null or admin.fullName == null}">Chúc mừng bạn!</span>
         </div>
     </div>
@@ -62,7 +63,7 @@
                            th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
                 </div>
 
-                <input name="page" id="page" type="hidden" th:value="1" >
+                <input name="page" id="page" type="hidden" th:value="1">
 
                 <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
             </form>
@@ -70,9 +71,6 @@
 
         <div class="heading">
             <h1>️ Danh sách Lịch bay</h1>
-        </div>
-        <div class="actions">
-            <button class="btn btn-primary" type="reset">🔄 Làm mới</button>
         </div>
     </div>
 
