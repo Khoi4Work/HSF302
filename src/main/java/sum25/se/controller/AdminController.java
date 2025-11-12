@@ -31,13 +31,15 @@ public class AdminController {
     private IUsersService iUsersService;
     @Autowired
     private IPaymentService iPaymentService;
+    @Autowired
+    private IAirportService iAirportService;
 
     private boolean isAdmin(Users user) {
         return user != null && user.getRoleUser() == RoleUsers.ADMIN;
     }
 
     @GetMapping("/admin")
-    public ModelAndView showAdminPage(HttpSession session) {
+    public ModelAndView showAdminPage(HttpSession session, Model model) {
         Users user = (Users) session.getAttribute("LoggedIn");
         ModelAndView modelAndView = new ModelAndView();
 
@@ -56,6 +58,7 @@ public class AdminController {
             session.removeAttribute("loginSuccess");
         }
 
+        model.addAttribute("airports", iAirportService.getAllAirports());
         List<FlightSchedule_Plane> schedules = iFlightSchedulePlaneService.findAll();
         modelAndView.addObject("schedules", schedules);
         modelAndView.addObject("user", user);

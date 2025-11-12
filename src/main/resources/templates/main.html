@@ -16,7 +16,7 @@
         <a th:href="@{/login}">Đăng nhập</a>
         <a th:href="@{/register}">Đăng ký</a>
         <a th:href="@{/booking/create}">Đặt vé</a>
-        <a th:href="@{/booking/list}">Danh sách vé</a>
+<!--        <a th:href="@{/booking/list}">Danh sách vé</a>-->
         <a th:href="@{/flights}">Tra cứu chuyến bay</a>
     </nav>
 </div>
@@ -151,7 +151,6 @@
 </footer>
 
 <script>
-    // Tự động đóng thông báo sau 5 giây
     const notification = document.getElementById('successNotification');
     if (notification) {
         setTimeout(() => {
@@ -169,9 +168,9 @@
         }
     }
 
-    // Logic kiểm tra Điểm đi và Điểm đến không trùng nhau
     document.addEventListener('DOMContentLoaded', function () {
         const searchForm = document.getElementById('searchForm');
+        const dateInput = document.getElementById('date');
 
         if (searchForm) {
             searchForm.addEventListener('submit', function (event) {
@@ -179,10 +178,26 @@
                 const destination = document.getElementById('destination').value;
 
                 if (departure && destination && departure === destination) {
-                    event.preventDefault(); // Ngăn chặn form gửi đi
+                    event.preventDefault();
                     alert('Điểm đi và Điểm đến không được trùng nhau. Vui lòng chọn lại.');
                 }
             });
+        }
+
+        // không cho phép chọn ngày trong quá khứ
+        if (dateInput) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const minDate = `${year}-${month}-${day}`;
+
+            dateInput.min = minDate;
+
+            if (dateInput.value && dateInput.value < minDate) {
+                dateInput.value = minDate;
+            }
         }
     });
 </script>

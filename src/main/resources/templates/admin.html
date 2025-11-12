@@ -7,7 +7,6 @@
 </head>
 <body>
 
-<!-- Thông báo đăng nhập thành công -->
 <div th:if="${loginSuccess}" id="successNotification" class="success-notification">
     <div class="success-icon"></div>
     <div class="success-content">
@@ -29,7 +28,6 @@
 
 
 <main>
-    <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-center">
             <a th:href="@{/schedule/admin}" class="nav-link">🏠 Trang chủ</a>
@@ -44,23 +42,42 @@
     </nav>
     <div class="header">
         <div class="search-section">
-            <form th:action="@{/flight/search}" method="get" class="search-form">
+            <form th:action="@{/flight/search}" method="get" class="search-form" id="searchForm">
                 <div class="form-group">
                     <label for="departure">Điểm đi:</label>
-                    <input type="text" id="departure" name="departure"
-                           th:value="${departure}" placeholder="Ví dụ: SGN" required>
+                    <select id="departure" name="departure" class="form-control" th:value="${departure}" required>
+                        <option value="">Chọn điểm đi</option>
+                        <option th:each="airport : ${airports}"
+                                th:value="${airport.code}"
+                                th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                                th:selected="${airport.code == departure}"></option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="destination">Điểm đến:</label>
-                    <input type="text" id="destination" name="destination"
-                           th:value="${destination}" placeholder="Ví dụ: HAN" required>
+                    <select id="destination" name="destination" class="form-control" th:value="${destination}" required>
+                        <option value="">Chọn điểm đến</option>
+                        <option th:each="airport : ${airports}"
+                                th:value="${airport.code}"
+                                th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                                th:selected="${airport.code == destination}"></option>
+                    </select>
                 </div>
 
                 <div class="form-group">
                     <label for="date">Ngày cất cánh:</label>
                     <input type="date" id="date" name="date"
                            th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="seatClass">Hạng ghế:</label>
+                    <select id="seatClass" name="seatClass">
+                        <option value="" th:selected="${seatClass == null or seatClass == ''}">Tất cả</option>
+                        <option value="Economy" th:selected="${seatClass == 'Economy'}">Economy</option>
+                        <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
+                    </select>
                 </div>
 
                 <input name="page" id="page" type="hidden" th:value="1">
@@ -148,7 +165,6 @@
 </footer>
 
 <script>
-    // Tự động đóng thông báo sau 5 giây
     const notification = document.getElementById('successNotification');
     if (notification) {
         setTimeout(() => {
@@ -165,6 +181,40 @@
             }, 500);
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchForm = document.getElementById('searchForm');
+        const dateInput = document.getElementById('date');
+
+        if (searchForm) {
+            searchForm.addEventListener('submit', function (event) {
+                // Sửa lỗi: Lấy giá trị từ các thẻ <select>
+                const departure = document.getElementById('departure').value;
+                const destination = document.getElementById('destination').value;
+
+                if (departure && destination && departure === destination) {
+                    event.preventDefault();
+                    alert('Điểm đi và Điểm đến không được trùng nhau. Vui lòng chọn lại.');
+                }
+            });
+        }
+
+        // không cho phép chọn ngày trong quá khứ
+        if (dateInput) {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+
+            const minDate = `${year}-${month}-${day}`;
+
+            dateInput.min = minDate;
+
+            if (dateInput.value && dateInput.value < minDate) {
+                dateInput.value = minDate;
+            }
+        }
+    });
 </script>
 </body>
 </html>
