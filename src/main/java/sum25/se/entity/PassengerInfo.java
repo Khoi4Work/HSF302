@@ -25,13 +25,9 @@ public class PassengerInfo {
 
     String fullName;
     String passportNumber;
-<<<<<<< HEAD
+
     LocalDate dateOfBirth;
-=======
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    Date dateOfBirth;
->>>>>>> 15b1797884603b30a8722acaa68288455f888c1b
+
     @ManyToOne
     @JoinColumn(name = "bookingId")
     Booking booking;
