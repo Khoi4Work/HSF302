@@ -132,16 +132,18 @@
     <button class="success-close" onclick="closeNotification()">×</button>
 </div>
 
-<header>
-    <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
-</header>
+<div class="top-bar">
+    <header>
+        <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
+    </header>
 
-<nav>
-    <a th:href="@{/booking/create}">Đặt vé</a>
-    <a th:href="@{/booking/list}">Danh sách vé</a>
-<!--    <a th:href="@{/flights}">Tra cứu chuyến bay</a>-->
-    <a th:href="@{/logout}">Đăng xuất</a>
-</nav>
+    <nav>
+        <a th:href="@{/booking/create}">Đặt vé</a>
+        <a th:href="@{/booking/list}">Danh sách vé</a>
+    <!--    <a th:href="@{/flights}">Tra cứu chuyến bay</a>-->
+        <a th:href="@{/logout}">Đăng xuất</a>
+    </nav>
+</div>
 
 <main>
     <div class="search-section">

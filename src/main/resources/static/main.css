@@ -8,6 +8,13 @@
     --radius: 12px;
 }
 
+.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+}
+
 /* Reset cơ bản */
 * {
     margin: 0;
