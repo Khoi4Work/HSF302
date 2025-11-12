@@ -180,7 +180,7 @@
                 <a th:if="${b.status != null and b.status.toString() == 'PENDING'}" 
                    th:href="@{'/booking/edit/' + ${b.bookingId}}"
                    class="btn-edit">
-                    Cập nhật
+                    Cập nhật và thanh toán
                 </a>
                 <a th:if="${b.status != null and b.status.toString() == 'PENDING'}" 
                    th:href="@{'/booking/cancel/' + ${b.bookingId}}"

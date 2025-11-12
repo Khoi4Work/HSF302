@@ -96,23 +96,21 @@
         <input type="text" name="passengerName" id="passengerName" th:value="${user}" placeholder="Nhập tên hành khách" required />
 
         <label for="flightSelect">Chuyến bay:</label>
-        <select name="flightId" id="flightSelect" required>
-            <option value="">-- Chọn chuyến bay --</option>
-            <option th:each="f : ${schedule_plane}"
-                    th:value="${f.flightPlaneId}"
-                    th:text="${f.plane.planeModel + ' (' + f.takeOff + ' - ' + f.land + ')'}"
-                    th:selected="${selectedFlight != null and f.flightPlaneId == selectedFlight.flightPlaneId}">
-            </option>
-        </select>
+        <input type="text"
+               id="flightSelect"
+               th:value="${selectedFlight != null ? (selectedFlight.plane.planeModel + ' (' + selectedFlight.takeOff + ' - ' + selectedFlight.land + ')') : ''}"
+               readonly
+               style="background: #f0f0f0; cursor: not-allowed;">
+        <input type="hidden" name="flightId" th:value="${selectedFlight != null ? selectedFlight.flightPlaneId : ''}">
 
         <label for="seatClassSelect">Hạng ghế:</label>
-        <select name="seatClass" id="seatClassSelect" required>
-            <option value="">-- Chọn hạng ghế --</option>
-            <option value="Economy"
-                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Economy'}">Economy</option>
-            <option value="Business"
-                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Business'}">Business</option>
-        </select>
+        <input type="text"
+               id="seatClassSelect"
+               th:value="${selectedFlight != null ? selectedFlight.flightSchedule.seatClass : ''}"
+               readonly
+               style="background: #f0f0f0; cursor: not-allowed;">
+        <input type="hidden" name="seatClass" th:value="${selectedFlight != null ? selectedFlight.flightSchedule.seatClass : ''}">
+
 
         <label for="totalPrice">Tổng giá:</label>
         <input type="number" name="totalPrice" id="totalPrice"
