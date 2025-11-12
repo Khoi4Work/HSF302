@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Cập nhật thông tin & Thanh toán</title>
     <style>
+        /* ... CSS giữ nguyên ... */
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f9fc;
@@ -49,6 +50,7 @@
 
         .required {
             color: red;
+            font-weight: bold;
         }
 
         input, select {
@@ -65,6 +67,13 @@
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+        }
+
+        .error-field {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
         }
 
         .info-section {
@@ -92,15 +101,6 @@
             border-bottom: none;
         }
 
-        .info-label {
-            font-weight: bold;
-            color: #495057;
-        }
-
-        .info-value {
-            color: #212529;
-        }
-
         .total-amount {
             background-color: #d4edda;
             padding: 15px;
@@ -109,44 +109,10 @@
             margin: 20px 0;
         }
 
-        .total-amount .label {
-            font-size: 14px;
-            color: #155724;
-            margin-bottom: 5px;
-        }
-
         .total-amount .amount {
             font-size: 28px;
             font-weight: bold;
             color: #28a745;
-        }
-
-        .vnpay-logo {
-            text-align: center;
-            margin: 20px 0;
-        }
-
-        .vnpay-logo img {
-            max-width: 150px;
-        }
-
-        .info-note {
-            background-color: #fff3cd;
-            color: #856404;
-            padding: 12px;
-            border-radius: 5px;
-            border-left: 4px solid #ffc107;
-            margin: 15px 0;
-            font-size: 14px;
-        }
-
-        .info-note ul {
-            margin: 8px 0 0 0;
-            padding-left: 20px;
-        }
-
-        .info-note li {
-            margin: 5px 0;
         }
 
         .button-group {
@@ -173,8 +139,6 @@
 
         .btn-payment:hover {
             background-color: #218838;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
 
         .btn-cancel {
@@ -182,39 +146,19 @@
             color: white;
         }
 
-        .btn-cancel:hover {
-            background-color: #5a6268;
-        }
-
         .error-message {
             color: #721c24;
             background-color: #f8d7da;
-            padding: 12px;
+            padding: 15px;
             border-radius: 5px;
             margin-bottom: 15px;
             border-left: 4px solid #dc3545;
         }
 
-        .success-message {
-            color: #155724;
-            background-color: #d4edda;
-            padding: 12px;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            border-left: 4px solid #28a745;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #007bff;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .back-link:hover {
-            text-decoration: underline;
+        .error-message pre {
+            margin: 0;
+            font-family: Arial;
+            white-space: pre-line;
         }
     </style>
 </head>
@@ -224,112 +168,75 @@
     <h2>Cập nhật thông tin & Thanh toán</h2>
     <p class="subtitle">Vui lòng điền đầy đủ thông tin hành khách trước khi thanh toán</p>
 
-    <div th:if="${success}" class="success-message" th:text="${success}"></div>
-    <div th:if="${error}" class="error-message" th:text="${error}"></div>
+    <div th:if="${error}" class="error-message">
+        <strong>❌ Vui lòng kiểm tra lại thông tin:</strong>
+        <pre th:text="${error}"></pre>
+    </div>
 
+    <!-- ✅ Dùng th:object với PassengerInfo entity -->
     <form th:action="@{'/booking/update-and-payment/' + ${booking.bookingId}}"
           method="post"
+          th:object="${passengerInfo}"
           id="bookingPaymentForm">
 
         <div class="info-section">
             <h3>📋 Thông tin đặt vé</h3>
             <div class="info-row">
-                <span class="info-label">Mã đặt vé:</span>
-                <span class="info-value" th:text="${booking.bookingId}"></span>
+                <span>Mã đặt vé:</span>
+                <span th:text="${booking.bookingId}"></span>
             </div>
             <div class="info-row">
-                <span class="info-label">Chuyến bay:</span>
-                <span class="info-value" th:text="${booking.plane != null ? booking.plane.planeModel : 'N/A'}"></span>
+                <span>Chuyến bay:</span>
+                <span th:text="${booking.plane?.planeModel ?: 'N/A'}"></span>
             </div>
             <div class="info-row">
-                <span class="info-label">Hạng ghế:</span>
-                <span class="info-value" th:text="${booking.seatClass ?: 'N/A'}"></span>
+                <span>Hạng ghế:</span>
+                <span th:text="${booking.seatClass ?: 'N/A'}"></span>
             </div>
         </div>
 
         <h3 style="color: #007bff; margin-top: 25px;">👤 Thông tin hành khách</h3>
 
+        <!-- Hidden field để giữ passengerId -->
+        <input type="hidden" th:field="*{passengerId}" />
+
         <label for="fullName">Họ và tên: <span class="required">*</span></label>
-        <input type="text"
-               name="fullName"
-               id="fullName"
-               th:value="${passengerInfo.fullName}"
-               placeholder="Ví dụ: Nguyễn Văn A"
-               required/>
+        <input type="text" th:field="*{fullName}" id="fullName" placeholder="Ví dụ: Nguyễn Văn A" required/>
+        <span class="error-field" th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></span>
 
-        <label for="gender">Giới tính:</label>
-        <select name="gender" id="gender">
+        <label for="gender">Giới tính: <span class="required">*</span></label>
+        <select th:field="*{gender}" id="gender" required>
             <option value="">-- Chọn giới tính --</option>
-            <option value="Male" th:selected="${passengerInfo.gender == 'Male'}">Nam</option>
-            <option value="Female" th:selected="${passengerInfo.gender == 'Female'}">Nữ</option>
-            <option value="Other" th:selected="${passengerInfo.gender == 'Other'}">Khác</option>
+            <option value="Male">Nam</option>
+            <option value="Female">Nữ</option>
+            <option value="Other">Khác</option>
         </select>
+        <span class="error-field" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
 
-        <label for="passportNumber">Số hộ chiếu / CCCD:</label>
-        <input type="text"
-               name="passportNumber"
-               id="passportNumber"
-               th:value="${passengerInfo.passportNumber}"
-               placeholder="Nhập số hộ chiếu hoặc CCCD"/>
+        <label for="passportNumber">Số hộ chiếu / CCCD: <span class="required">*</span></label>
+        <input type="text" th:field="*{passportNumber}" id="passportNumber" placeholder="VD: VN123456789" required/>
+        <span class="error-field" th:if="${#fields.hasErrors('passportNumber')}" th:errors="*{passportNumber}"></span>
 
-        <label for="dateOfBirth">Ngày sinh:</label>
-        <input type="date"
-               name="dateOfBirth"
-               id="dateOfBirth"
-               th:value="${passengerInfo.dateOfBirth != null ? passengerInfo.dateOfBirth : ''}"
-        />
+        <label for="dateOfBirth">Ngày sinh: <span class="required">*</span></label>
+        <input type="date" th:field="*{dateOfBirth}" id="dateOfBirth" required/>
+        <span class="error-field" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
 
         <div class="total-amount">
-            <div class="label">Tổng số tiền thanh toán</div>
+            <div>Tổng số tiền thanh toán</div>
             <div class="amount" th:text="|${#numbers.formatInteger(booking.totalPrice, 0, 'COMMA')} VND|">0 VND</div>
         </div>
 
-        <div class="vnpay-logo">
-            <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/9/06ncktiwd6dc1694418196384.png" alt="VNPay Logo">
-        </div>
-
-        <div class="info-note">
-            <strong>⚠️ Lưu ý quan trọng:</strong>
-            <ul>
-                <li>Vui lòng kiểm tra kỹ thông tin trước khi thanh toán</li>
-                <li>Sau khi thanh toán thành công, bạn không thể chỉnh sửa hoặc hủy vé</li>
-                <li>Thông tin hành khách sẽ được lưu và cập nhật trước khi chuyển đến VNPay</li>
-            </ul>
+        <div style="text-align: center; margin: 20px 0;">
+            <img src="https://vnpay.vn/s1/statics.vnpay.vn/2023/9/06ncktiwd6dc1694418196384.png" alt="VNPay" style="max-width: 150px;">
         </div>
 
         <div class="button-group">
-            <button type="submit" class="btn-payment">
-                💳 Cập nhật & Thanh toán qua VNPay
-            </button>
-            <button type="button" class="btn-cancel" onclick="window.location.href='/booking/list'">
-                ❌ Hủy
-            </button>
+            <button type="submit" class="btn-payment">💳 Cập nhật & Thanh toán qua VNPay</button>
+            <button type="button" class="btn-cancel" onclick="window.location.href='/booking/list'">❌ Hủy</button>
         </div>
     </form>
 
-    <a href="/booking/list" class="back-link">← Quay lại danh sách vé</a>
+    <a href="/booking/list" style="display: block; text-align: center; margin-top: 15px; color: #007bff; text-decoration: none;">← Quay lại danh sách vé</a>
 </main>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('bookingPaymentForm');
-
-        form.addEventListener('submit', function (e) {
-            const fullName = document.getElementById('fullName').value.trim();
-
-            if (!fullName) {
-                e.preventDefault();
-                alert('Vui lòng nhập họ tên hành khách!');
-                return false;
-            }
-
-            // Confirm trước khi submit
-            if (!confirm('Bạn đã kiểm tra kỹ thông tin và đồng ý thanh toán vé này?')) {
-                e.preventDefault();
-                return false;
-            }
-        });
-    });
-</script>
 </body>
 </html>

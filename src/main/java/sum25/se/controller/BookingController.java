@@ -1,14 +1,12 @@
 package sum25.se.controller;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import sum25.se.entity.*;
 import sum25.se.service.*;
 
@@ -313,10 +311,7 @@ public class BookingController {
     @PostMapping("/update-and-payment/{id}")
     public String updateAndPayment(
             @PathVariable Integer id,
-            @RequestParam("fullName") String fullName,
-            @RequestParam(value = "gender", required = false) String gender,
-            @RequestParam(value = "passportNumber", required = false) String passportNumber,
-            @RequestParam(value = "dateOfBirth", required = false) String dateOfBirthStr,
+            @ModelAttribute("passengerInfo") PassengerInfo passengerInfo, 
             HttpSession session,
             Model model) {
 
@@ -324,43 +319,44 @@ public class BookingController {
         if (user == null) {
             return "redirect:/login";
         }
+
         Booking booking = iBookingService.getBookingById(id);
+        if (booking == null) {
+            model.addAttribute("error", "Không tìm thấy vé đặt!");
+            return "redirect:/booking/list";
+        }
+
         if (booking.getStatus() != null && !booking.getStatus().toString().equals("PENDING")) {
             model.addAttribute("error", "Vé này đã được thanh toán hoặc đã bị hủy!");
             return "redirect:/booking/list";
         }
+
         if (!booking.getUsers().getUserId().equals(user.getUserId())) {
             model.addAttribute("error", "Bạn không có quyền thực hiện hành động này!");
             return "redirect:/booking/list";
         }
+
         try {
-            Booking updatedBooking = iBookingService.updatePassengerInfoAndGetBooking(
-                    id,
-                    fullName,
-                    gender,
-                    passportNumber,
-                    dateOfBirthStr,
-                    iPassengerInfoService
-            );
-            String paymentUrl = vnPayService.createPaymentUrl(updatedBooking);
-            System.out.println("🔗 Payment URL: " + paymentUrl);
+            passengerInfo.setBooking(booking);
+
+            if (passengerInfo.getPassengerId() != null) {
+                iPassengerInfoService.updatePassenger(passengerInfo.getPassengerId(), passengerInfo);
+            } else {
+                iPassengerInfoService.createPassenger(passengerInfo);
+            }
+
+            String paymentUrl = vnPayService.createPaymentUrl(booking);
             return "redirect:" + paymentUrl;
+
         } catch (Exception e) {
             e.printStackTrace();
-            model.addAttribute("error","Có lỗi xảy ra: " + e.getMessage());
-
+            model.addAttribute("error", "❌ Có lỗi xảy ra: " + e.getMessage());
             model.addAttribute("booking", booking);
-            PassengerInfo errorPassengerInfo = booking.getPassengerInfos() != null &&
-                    !booking.getPassengerInfos().isEmpty()
-                    ? booking.getPassengerInfos().get(0)
-                    : new PassengerInfo();
-            if (errorPassengerInfo.getPassengerId() == null) {
-                errorPassengerInfo.setBooking(booking);
-            }
-            model.addAttribute("passengerInfo", errorPassengerInfo);
+            model.addAttribute("passengerInfo", passengerInfo);
             return "booking_edit";
         }
     }
+
     @GetMapping("/payment-return")
     public String paymentReturn(@RequestParam Map<String, String> allParams,
                                 HttpSession session,
