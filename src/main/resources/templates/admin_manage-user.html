@@ -6,8 +6,9 @@
     <link rel="stylesheet" th:href="@{/main.css}">
 </head>
 <body>
-<header>
+<header >
     <h2>👤 Quản lý người dùng</h2>
+    <span th:if="${admin != null}" th:text="${admin.fullName}">Admin</span>
 </header>
 
 <main>

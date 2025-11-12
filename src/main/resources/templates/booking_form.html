@@ -93,7 +93,7 @@
 
     <form th:action="@{/booking/create}" method="post" id="bookingForm">
         <label for="passengerName">Tên hành khách:</label>
-        <input type="text" name="passengerName" id="passengerName" placeholder="Nhập tên hành khách" required />
+        <input type="text" name="passengerName" id="passengerName" th:value="${user}" placeholder="Nhập tên hành khách" required />
 
         <label for="flightSelect">Chuyến bay:</label>
         <select name="flightId" id="flightSelect" required>

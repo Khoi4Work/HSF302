@@ -70,7 +70,7 @@ public class DataInitializer implements CommandLineRunner {
         Users admin = new Users();
         admin.setFullName("System Administrator");
         admin.setEmail("admin@skyticket.com");
-        admin.setPassword("admin123");
+        admin.setPassword("123123");
         admin.setPhone("0123456789");
         admin.setPassportNumber("VN0000001");
         admin.setDateOfBirth(LocalDate.of(1990, 1, 1));
@@ -79,7 +79,7 @@ public class DataInitializer implements CommandLineRunner {
         Users demoUser = new Users();
         demoUser.setFullName("Demo User");
         demoUser.setEmail("user@skyticket.com");
-        demoUser.setPassword("user123");
+        demoUser.setPassword("123123");
         demoUser.setPhone("0987654321");
         demoUser.setPassportNumber("VN0000002");
         demoUser.setDateOfBirth(LocalDate.of(1995, 5, 15));

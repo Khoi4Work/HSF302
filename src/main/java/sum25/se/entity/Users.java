@@ -24,13 +24,16 @@ public class Users {
     String fullName;
     @NotBlank(message = "Please enter your email")
     @Email(message = "Email không hợp lệ")
+    @Column(unique = true, nullable = false)
     String email;
     @NotBlank(message = "Please enter your password")
     @Size(min = 6, message = "Password phải có ít nhất 6 ký tự")
     String password;
     @NotBlank(message = "Please enter your phone number")
     @Pattern(regexp = "^[0-9]{9,10}$", message = "Phone number must be 9-10 digits")
+    @Column(unique = true, nullable = false)
     String phone;
+    @Column(unique = true, nullable = false)
     String passportNumber;
     LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)

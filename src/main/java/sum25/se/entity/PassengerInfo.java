@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class PassengerInfo {
     @Column(columnDefinition = "NVARCHAR(100)")
     String fullName;
     String passportNumber;
-    Date dateOfBirth;
+    LocalDate dateOfBirth;
     @ManyToOne
     @JoinColumn(name= "bookingId")
     Booking booking;

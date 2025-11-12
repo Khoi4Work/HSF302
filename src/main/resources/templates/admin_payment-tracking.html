@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Theo dõi giao dịch</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/admin.css}">
+</head>
+<body class="bg-light">
+<header>
+    <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
+
+    <span th:if="${admin != null}" th:text="${admin.fullName}">Admin</span>
+</header>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4 text-primary">📊 Theo dõi giao dịch</h2>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-primary text-center">
+                <tr>
+                    <th>Mã thanh toán</th>
+                    <th>Ngày thanh toán</th>
+                    <th>Số tiền</th>
+                    <th>Phương thức</th>
+                    <th>Trạng thái</th>
+                    <th>Mã đặt vé</th>
+                    <th>Người đặt</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="payment : ${payments}" class="text-center">
+                    <td th:text="${payment.paymentId}">1</td>
+                    <td th:text="${#temporals.format(payment.paymentDate, 'dd/MM/yyyy HH:mm')}">12/11/2025</td>
+                    <td th:text="${#numbers.formatDecimal(payment.amount, 0, 'COMMA', 2, 'POINT')} + ' VND'">1,500,000 VND</td>
+                    <td th:text="${payment.paymentMethod}">Credit Card</td>
+                    <td>
+                        <span th:text="${payment.paymentStatus}"
+                              th:classappend="${payment.paymentStatus == 'SUCCESS' ? 'badge bg-success' :
+                                              payment.paymentStatus == 'PENDING' ? 'badge bg-warning text-dark' :
+                                              'badge bg-danger'}">
+                        </span>
+                    </td>
+                    <td th:text="${payment.booking.bookingId}">BK-123</td>
+                    <td th:text="${payment.booking.users.fullName}">Nguyễn Văn A</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

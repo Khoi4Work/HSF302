@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import sum25.se.entity.*;
 import sum25.se.service.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -41,7 +42,7 @@ public class BookingController {
         System.out.println("show booking create...");
         // Lấy danh sách chuyến bay để chọn (nếu người dùng muốn đổi)
         model.addAttribute("schedule_plane", iFlightSchedulePlaneService.findAll());
-
+        model.addAttribute("user", user.getFullName());
         // Nếu có flightId -> Lấy chuyến bay cụ thể để pre-fill form
         if (flightId != null) {
             FlightSchedule_Plane flight = iFlightService.getFlightPlaneByFlightId(flightId);
@@ -88,6 +89,10 @@ public class BookingController {
         // Tạo PassengerInfo với tên hành khách
         PassengerInfo passengerInfo = new PassengerInfo();
         passengerInfo.setFullName(passengerName);
+        if (passengerName.equalsIgnoreCase(user.getFullName())){
+            passengerInfo.setPassportNumber(user.getPassportNumber());
+            passengerInfo.setDateOfBirth(user.getDateOfBirth());
+        }
         passengerInfo.setBooking(savedBooking);
 
         // Lưu PassengerInfo
@@ -239,9 +244,7 @@ public class BookingController {
         // Xử lý dateOfBirth
         if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
             try {
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date dateOfBirth = sdf.parse(dateOfBirthStr);
-                passengerInfo.setDateOfBirth(dateOfBirth);
+                passengerInfo.setDateOfBirth(LocalDate.parse(dateOfBirthStr));
             } catch (Exception e) {
                 // Nếu không parse được, giữ nguyên giá trị cũ
             }
@@ -390,6 +393,7 @@ public class BookingController {
 
                 Booking booking = iBookingService.getBookingById(bookingId);
                 if (booking != null) {
+
                     booking.setStatus(StatusBooking.COMPLETED);
                     iBookingService.updateBooking(bookingId, booking);
 

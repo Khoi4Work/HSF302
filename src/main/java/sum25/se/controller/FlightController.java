@@ -38,6 +38,7 @@ public class FlightController {
                                    @RequestParam("date")
                                    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
                                    @RequestParam(value = "seatClass", required = false) String seatClass,
+                                   @RequestParam("page") Integer page,
                                    Model model) {
 
         List<FlightSchedule_Plane> flights = iFlightService.searchFlights(departure, destination, date, seatClass);
@@ -49,6 +50,11 @@ public class FlightController {
         model.addAttribute("seatClass", seatClass);
         model.addAttribute("airports", iAirportService.getAllAirports());
 
-        return "mainPage";
+        return switch (page) {
+            case 1 -> "admin";
+            case 2 -> "mainPage";
+            case 3 -> "main";
+            default -> "error";
+        };
     }
 }

@@ -8,6 +8,7 @@ import sum25.se.entity.PassengerInfo;
 import sum25.se.entity.Users;
 import sum25.se.repository.IBookingRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -103,9 +104,7 @@ public class BookingServiceImpl implements IBookingService {
 
         if (dateOfBirthStr != null && !dateOfBirthStr.isEmpty()) {
             try {
-                java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd");
-                java.util.Date dateOfBirth = sdf.parse(dateOfBirthStr);
-                passengerInfo.setDateOfBirth(dateOfBirth);
+                passengerInfo.setDateOfBirth(LocalDate.parse(dateOfBirthStr));
             } catch (Exception e) {
                 System.out.println(" Không parse được ngày sinh: " + e.getMessage());
             }

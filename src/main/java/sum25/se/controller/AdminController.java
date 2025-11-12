@@ -12,6 +12,7 @@ import sum25.se.entity.*;
 import sum25.se.service.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/schedule")
@@ -28,33 +29,31 @@ public class AdminController {
 
     @Autowired
     private IUsersService iUsersService;
+    @Autowired
+    private IPaymentService iPaymentService;
 
     private boolean isAdmin(Users user) {
         return user != null && user.getRoleUser() == RoleUsers.ADMIN;
     }
 
     @GetMapping("/admin")
-    public ModelAndView showAdminPage(HttpSession httpSession) {
-        Users user = (Users) httpSession.getAttribute("LoggedIn");
+    public ModelAndView showAdminPage(HttpSession session) {
+        Users user = (Users) session.getAttribute("LoggedIn");
         ModelAndView modelAndView = new ModelAndView();
 
-        if (user == null) {
-            modelAndView.setViewName("redirect:/login");
+        modelAndView = authorizeAdmin(modelAndView, user);
+
+        if (!Objects.equals(modelAndView.getViewName(), null)) {
             return modelAndView;
         }
 
-        if (!isAdmin(user)) {
-            modelAndView.setViewName("403"); // Trang Forbidden
-            modelAndView.addObject("error", "Bạn không có quyền truy cập trang này!");
-            return modelAndView;
-        }
 
-        modelAndView.addObject("user", user);
+        modelAndView.addObject("admin", user);
 
-        Boolean loginSuccess = (Boolean) httpSession.getAttribute("loginSuccess");
+        Boolean loginSuccess = (Boolean) session.getAttribute("loginSuccess");
         if (loginSuccess != null && loginSuccess) {
             modelAndView.addObject("loginSuccess", true);
-            httpSession.removeAttribute("loginSuccess");
+            session.removeAttribute("loginSuccess");
         }
 
         List<FlightSchedule_Plane> schedules = iFlightSchedulePlaneService.findAll();
@@ -82,23 +81,17 @@ public class AdminController {
     }
 
     @GetMapping("/addSchedule")
-    public ModelAndView showAddNewSchedule(HttpSession httpSession) {
-        Users user = (Users) httpSession.getAttribute("LoggedIn");
+    public ModelAndView showAddNewSchedule(HttpSession session) {
+        Users user = (Users) session.getAttribute("LoggedIn");
         ModelAndView modelAndView = new ModelAndView();
 
+        modelAndView = authorizeAdmin(modelAndView, user);
 
-        if (user == null) {
-            modelAndView.setViewName("redirect:/login");
+        if (!Objects.equals(modelAndView.getViewName(), null)) {
             return modelAndView;
         }
 
-
-        if (!isAdmin(user)) {
-            modelAndView.setViewName("403");
-            modelAndView.addObject("error", "Bạn không có quyền truy cập trang này!");
-            return modelAndView;
-        }
-
+        modelAndView.addObject("admin", user);
         List<Plane> planes = iFlightService.getAllFlights();
         List<FlightSchedule> flightSchedules = iFlightScheduleService.getAllSchedules();
 
@@ -114,12 +107,12 @@ public class AdminController {
     public String addNewSchedule(
             @Valid @ModelAttribute("schedule") FlightSchedule_Plane schedule,
             BindingResult bindingResult,
-            HttpSession httpSession,
+            HttpSession session,
             Model model,
             @RequestParam("planeId") int planeId,
             @RequestParam("scheduleId") int scheduleId) {
 
-        Users user = (Users) httpSession.getAttribute("LoggedIn");
+        Users user = (Users) session.getAttribute("LoggedIn");
 
         if (user == null) {
             return "redirect:/login";
@@ -164,18 +157,12 @@ public class AdminController {
 
 
     @GetMapping("/editSchedule/{id}")
-    public ModelAndView showEditSchedule(HttpSession httpSession, @PathVariable int id) {
-        Users user = (Users) httpSession.getAttribute("LoggedIn");
+    public ModelAndView showEditSchedule(HttpSession session, @PathVariable int id) {
+        Users user = (Users) session.getAttribute("LoggedIn");
         ModelAndView modelAndView = new ModelAndView();
-        if (user == null) {
-            modelAndView.setViewName("redirect:/login");
-            return modelAndView;
-        }
+        modelAndView = authorizeAdmin(modelAndView, user);
 
-
-        if (!isAdmin(user)) {
-            modelAndView.setViewName("403");
-            modelAndView.addObject("error", "Bạn không có quyền truy cập trang này!");
+        if (!Objects.equals(modelAndView.getViewName(), null)) {
             return modelAndView;
         }
 
@@ -183,6 +170,7 @@ public class AdminController {
         List<FlightSchedule> flightSchedules = iFlightScheduleService.getAllSchedules();
         FlightSchedule_Plane schedule = iFlightSchedulePlaneService.findById(id);
 
+        modelAndView.addObject("admin", user);
         modelAndView.addObject("planes", planes);
         modelAndView.addObject("flightSchedules", flightSchedules);
         modelAndView.addObject("schedule", schedule);
@@ -245,23 +233,53 @@ public class AdminController {
 
     @GetMapping("/admin/users")
     public ModelAndView showUserList(HttpSession session) {
-        Users loggedIn = (Users) session.getAttribute("LoggedIn");
+        Users user = (Users) session.getAttribute("LoggedIn");
         ModelAndView mv = new ModelAndView();
+        mv = authorizeAdmin(mv, user);
 
-        if (loggedIn == null) {
+        if (!Objects.equals(mv.getViewName(), null)) {
+            return mv;
+        }
+
+        List<Users> users = iUsersService.getAllUsers()
+                .stream()
+                .filter(users1 -> !users1.getRoleUser().equals(RoleUsers.ADMIN))
+                .toList();
+        mv.addObject("admin", user);
+        mv.addObject("users", users);
+        mv.setViewName("admin_manage-user");
+        return mv;
+    }
+
+    @GetMapping("/payment")
+    public ModelAndView viewPayments(HttpSession session) {
+        Users user = (Users) session.getAttribute("LoggedIn");
+        ModelAndView mv = new ModelAndView();
+        mv = authorizeAdmin(mv, user);
+        if (!Objects.equals(mv.getViewName(), null)) {
+            return mv;
+        }
+
+
+        List<Payment> payments = iPaymentService.getAllPayments();
+        mv.addObject("payments", payments);
+        mv.addObject("admin", user);
+        mv.setViewName("admin_payment-tracking");
+        return mv;
+    }
+
+    public ModelAndView authorizeAdmin(ModelAndView mv, Users admin) {
+
+        if (admin == null) {
             mv.setViewName("redirect:/login");
             return mv;
         }
 
-        if (!isAdmin(loggedIn)) {
+        if (!isAdmin(admin)) {
             mv.setViewName("403");
             mv.addObject("error", "Bạn không có quyền truy cập trang này!");
             return mv;
         }
-
-        List<Users> users = iUsersService.getAllUsers();
-        mv.addObject("users", users);
-        mv.setViewName("admin_manage-user");
         return mv;
     }
 }

@@ -134,12 +134,12 @@
 
 <header>
     <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
+    <span th:if="${user != null}" th:text="${user.fullName}">Admin</span>
 </header>
 
 <nav>
     <a th:href="@{/booking/create}">Đặt vé</a>
     <a th:href="@{/booking/list}">Danh sách vé</a>
-<!--    <a th:href="@{/flights}">Tra cứu chuyến bay</a>-->
     <a th:href="@{/logout}">Đăng xuất</a>
 </nav>
 
@@ -184,6 +184,7 @@
                 </select>
             </div>
 
+            <input name="page" id="page" type="hidden" th:value="2" >
             <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
         </form>
     </div>
@@ -192,11 +193,9 @@
     <div class="header">
         <div class="heading">
             <h1>️ Danh sách Lịch bay</h1>
-            <p>Tìm và đặt vé máy bay của bạn</p>
         </div>
         <div class="actions">
-            <button class="btn btn-ghost" type="button">Bộ lọc</button>
-            <button class="btn btn-primary" type="button">🔄 Làm mới</button>
+            <button class="btn btn-primary" type="reset">🔄 Làm mới</button>
         </div>
     </div>
 
@@ -233,9 +232,7 @@
                         <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
                         <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
                         <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                        <td class="num">
-                            1,500,000 VND
-                        </td>
+                        <td class="num" th:text="${flight.flightSchedule.price}"></td>
                         <td>
                         <span th:switch="${flight.plane.status}">
                             <span th:case="'Scheduled'" class="status-badge status-scheduled"

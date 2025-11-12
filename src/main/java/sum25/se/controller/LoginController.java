@@ -16,6 +16,7 @@ import sum25.se.service.IAirportService;
 import sum25.se.service.IFlightSchedulePlaneService;
 import sum25.se.service.IUsersService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -50,11 +51,40 @@ public class LoginController {
     }
 
     @PostMapping("/register-success")
-    public String showRegisterSuccess(@Valid @ModelAttribute("user") Users user, BindingResult bindingResult, Model model) {
+    public String showRegisterSuccess(@Valid @ModelAttribute("user") Users user,
+                                      BindingResult bindingResult,
+                                      Model model) {
+
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("user", user);
+
+            // Validate tuổi ≥18
+            if (user.getDateOfBirth() != null &&
+                    user.getDateOfBirth().isAfter(LocalDate.now().minusYears(18))) {
+                // Thêm lỗi vào BindingResult
+                bindingResult.rejectValue(
+                        "dateOfBirth", // tên field trong DTO/entity
+                        "error.user",  // mã lỗi (có thể tuỳ ý)
+                        "Bạn phải trên 18 tuổi" // thông báo lỗi
+                );
+                return "register";
+            }
+
             return "register";
         }
+
+        if (user.getDateOfBirth() != null &&
+                user.getDateOfBirth().isAfter(LocalDate.now().minusYears(18))) {
+            // Thêm lỗi vào BindingResult
+            bindingResult.rejectValue(
+                    "dateOfBirth", // tên field trong DTO/entity
+                    "error.user",  // mã lỗi (có thể tuỳ ý)
+                    "Bạn phải trên 18 tuổi" // thông báo lỗi
+            );
+            return "register";
+        }
+
         iUsersService.createUser(user);
         return "redirect:/login";
     }
@@ -100,15 +130,15 @@ public class LoginController {
                                @RequestParam String password,
                                Model model) {
         Users user = iUsersService.login(email, password);
-        
+
         if (user == null) {
-            model.addAttribute("error","Invalid Email or number password"  );
+            model.addAttribute("error", "Invalid Email or number password");
             return "login";
         }
-        
+
         session.setAttribute("LoggedIn", user);
         session.setAttribute("loginSuccess", true);
-        
+
         if (user.getRoleUser() == RoleUsers.ADMIN) {
             return "redirect:/schedule/admin";
         } else {
