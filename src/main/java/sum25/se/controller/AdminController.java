@@ -33,6 +33,8 @@ public class AdminController {
     private IPaymentService iPaymentService;
     @Autowired
     private IAirportService iAirportService;
+    @Autowired
+    private IBookingService iBookingService;
 
     private boolean isAdmin(Users user) {
         return user != null && user.getRoleUser() == RoleUsers.ADMIN;
@@ -271,6 +273,23 @@ public class AdminController {
         mv.setViewName("admin_payment-tracking");
         return mv;
     }
+
+    @GetMapping("/admin/bookings")
+    public String showAllBookings(HttpSession session, Model model) {
+        Users admin = (Users) session.getAttribute("LoggedIn");
+        if (admin == null) return "redirect:/login";
+
+        if (!isAdmin(admin)) {
+            model.addAttribute("error", "Bạn không có quyền truy cập!");
+            return "403";
+        }
+
+        List<Booking> bookings = iBookingService.getAllBookings();
+        model.addAttribute("bookings", bookings);
+        return "admin_booking-list";
+    }
+
+
 
     public ModelAndView authorizeAdmin(ModelAndView mv, Users admin) {
 
