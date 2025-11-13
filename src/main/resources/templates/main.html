@@ -7,109 +7,112 @@
 </head>
 <body>
 
-<div class="top-bar">
-    <header>
-        <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
-    </header>
+<div class="background-image"></div>
 
-    <nav>
-        <a th:href="@{/login}">Đăng nhập</a>
-        <a th:href="@{/register}">Đăng ký</a>
-        <a th:href="@{/booking/create}">Đặt vé</a>
-<!--        <a th:href="@{/booking/list}">Danh sách vé</a>-->
-        <a th:href="@{/flights}">Tra cứu chuyến bay</a>
-    </nav>
-</div>
+<div class="content">
+    <div class="top-bar">
+        <header>
+            <h2>✈️ SkyTicket - Hệ Thống Đặt Vé Máy Bay</h2>
+        </header>
 
-<main>
-    <div class="search-section">
-        <form th:action="@{/flight/search}" method="get" class="search-form" id="searchForm">
-            <div class="form-group">
-                <label for="departure">Điểm đi:</label>
-                <select id="departure" name="departure" class="form-control" th:value="${departure}" required>
-                    <option value="">Chọn điểm đi</option>
-                    <option th:each="airport : ${airports}"
-                            th:value="${airport.code}"
-                            th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
-                            th:selected="${airport.code == departure}"></option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="destination">Điểm đến:</label>
-                <select id="destination" name="destination" class="form-control" th:value="${destination}" required>
-                    <option value="">Chọn điểm đến</option>
-                    <option th:each="airport : ${airports}"
-                            th:value="${airport.code}"
-                            th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
-                            th:selected="${airport.code == destination}"></option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="date">Ngày cất cánh:</label>
-                <input type="date" id="date" name="date"
-                       th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
-            </div>
-
-            <div class="form-group">
-                <label for="seatClass">Hạng ghế:</label>
-                <select id="seatClass" name="seatClass">
-                    <option value="" th:selected="${seatClass == null or seatClass == ''}">Tất cả</option>
-                    <option value="Economy" th:selected="${seatClass == 'Economy'}">Economy</option>
-                    <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
-                </select>
-            </div>
-
-            <input name="page" id="page" type="hidden" th:value="3">
-
-            <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
-            <a id="link" th:href="@{/main}" class="btn btn-secondary">Tất cả chuyến bay</a>
-
-        </form>
-
+        <nav>
+            <a th:href="@{/login}">Đăng nhập</a>
+            <a th:href="@{/register}">Đăng ký</a>
+            <a th:href="@{/booking/create}">Đặt vé</a>
+<!--            <a th:href="@{/flights}">Tra cứu chuyến bay</a>-->
+        </nav>
     </div>
 
-    <!--  DANH SÁCH CHUYẾN BAY -->
-    <div class="header">
-        <div class="heading">
-            <h1>️ Danh sách Lịch bay</h1>
-        </div>
-    </div>
+    <main>
+            <div class="search-section">
+                <form th:action="@{/flight/search}" method="get" class="search-form" id="searchForm">
+                    <div class="form-group">
+                        <label for="departure">Điểm đi:</label>
+                        <select id="departure" name="departure" class="form-control" th:value="${departure}" required>
+                            <option value="">Chọn điểm đi</option>
+                            <option th:each="airport : ${airports}"
+                                    th:value="${airport.code}"
+                                    th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                                    th:selected="${airport.code == departure}"></option>
+                        </select>
+                    </div>
 
-    <div class="table-card">
-        <div class="table-wrapper">
-            <table>
-                <thead>
-                <tr>
-                    <th>Hãng hàng không</th>
-                    <th>Sân bay đi</th>
-                    <th>Điểm cất cánh</th>
-                    <th>Điểm hạ cánh</th>
-                    <th>Ngày cất cánh</th>
-                    <th>Giờ cất cánh</th>
-                    <th>Ngày hạ cánh</th>
-                    <th>Giờ hạ cánh</th>
-                    <th>Loại ghế</th>
-                    <th>Số ghế</th>
-                    <th>Giá vé</th>
-                    <th>Trạng thái</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="flight : ${flights}">
-                    <td th:text="${flight.plane.planeModel}">Airbus A321</td>
-                    <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
-                    <td th:text="${flight.takeOff}">SGN</td>
-                    <td th:text="${flight.land}">HAN</td>
-                    <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
-                    <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
-                    <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
-                    <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
-                    <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
-                    <td class="num" th:text="${flight.flightSchedule.price}"></td>
-                    <td>
+                    <div class="form-group">
+                        <label for="destination">Điểm đến:</label>
+                        <select id="destination" name="destination" class="form-control" th:value="${destination}" required>
+                            <option value="">Chọn điểm đến</option>
+                            <option th:each="airport : ${airports}"
+                                    th:value="${airport.code}"
+                                    th:text="${airport.code} + ' - ' + ${airport.airportName} + ' (' + ${airport.location} + ')'"
+                                    th:selected="${airport.code == destination}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Ngày cất cánh:</label>
+                        <input type="date" id="date" name="date"
+                               th:value="${#temporals.format(date, 'yyyy-MM-dd')}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="seatClass">Hạng ghế:</label>
+                        <select id="seatClass" name="seatClass">
+                            <option value="" th:selected="${seatClass == null or seatClass == ''}">Tất cả</option>
+                            <option value="Economy" th:selected="${seatClass == 'Economy'}">Economy</option>
+                            <option value="Business" th:selected="${seatClass == 'Business'}">Business</option>
+                        </select>
+                    </div>
+
+                    <input name="page" id="page" type="hidden" th:value="3">
+
+                    <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
+                    <a id="link" th:href="@{/main}" class="btn btn-secondary">Tất cả chuyến bay</a>
+
+                </form>
+
+            </div>
+
+            <!--  DANH SÁCH CHUYẾN BAY -->
+            <div class="header">
+                <div class="heading">
+                    <h1>️ Danh sách Lịch bay</h1>
+                </div>
+            </div>
+
+            <div class="table-card">
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Hãng hàng không</th>
+                            <th>Sân bay đi</th>
+                            <th>Điểm cất cánh</th>
+                            <th>Điểm hạ cánh</th>
+                            <th>Ngày cất cánh</th>
+                            <th>Giờ cất cánh</th>
+                            <th>Ngày hạ cánh</th>
+                            <th>Giờ hạ cánh</th>
+                            <th>Loại ghế</th>
+                            <th>Số ghế</th>
+                            <th>Giá vé</th>
+                            <th>Trạng thái</th>
+                            <th>Đặt vé</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="flight : ${flights}">
+                            <td th:text="${flight.plane.planeModel}">Airbus A321</td>
+                            <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
+                            <td th:text="${flight.takeOff}">SGN</td>
+                            <td th:text="${flight.land}">HAN</td>
+                            <td th:text="${#temporals.format(flight.takeOffDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                            <td th:text="${#temporals.format(flight.takeOffHour, 'HH:mm')}">08:00</td>
+                            <td th:text="${#temporals.format(flight.landDate, 'dd-MM-yyyy')}">01-01-2025</td>
+                            <td th:text="${#temporals.format(flight.landHour, 'HH:mm')}">10:00</td>
+                            <td th:text="${flight.flightSchedule.seatClass}">Economy</td>
+                            <td class="num" th:text="${flight.flightSchedule.seatNumber}">1</td>
+                            <td class="num" th:text="${flight.flightSchedule.price}"></td>
+                            <td>
                         <span th:switch="${flight.plane.status}">
                             <span th:case="'Scheduled'" class="status-badge status-scheduled"
                                   th:text="${flight.plane.status}">Scheduled</span>
@@ -120,87 +123,56 @@
                             <span th:case="*" class="status-badge status-cancelled"
                                   th:text="${flight.plane.status}">Cancelled</span>
                         </span>
-                        <form th:action="@{/login}">
-                            <button>Đặt vé ngay</button>
-                        </form>
-                    </td>
-                </tr>
+                                <form th:action="@{/login}">
+                                    <button>Đặt vé ngay</button>
+                                </form>
+                            </td>
+                        </tr>
 
-                <tr th:if="${flights == null or flights.isEmpty()}">
-                    <td colspan="12">
-                        <div class="empty-state">
-                            <div class="empty-state-icon">📭</div>
-                            <p>Không có lịch bay nào.</p>
-                            <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                        <tr th:if="${flights == null or flights.isEmpty()}">
+                            <td colspan="12">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📭</div>
+                                    <p>Không có lịch bay nào.</p>
+                                    <small>Vui lòng quay lại sau hoặc liên hệ hỗ trợ khách hàng.</small>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-    <h1>Chào mừng đến với SkyTicket!</h1>
-    <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
+            <h1>Chào mừng đến với SkyTicket!</h1>
+            <p>Hệ thống giúp bạn tìm kiếm và đặt vé máy bay dễ dàng, nhanh chóng.</p>
 
 
-</main>
+    </main>
 
-<footer>
-    <p>© 2025 SkyTicket. All rights reserved.</p>
-</footer>
+    <footer>
+        <p>© 2025 SkyTicket. All rights reserved.</p>
+    </footer>
+</div>
 
-<script>
-    const notification = document.getElementById('successNotification');
-    if (notification) {
-        setTimeout(() => {
-            closeNotification();
-        }, 5000);
+<style>
+    .background-image {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        background-image: url('/plane.jpg'); /* thay đường dẫn ảnh thật */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        filter: brightness(0.6); /* làm mờ ảnh nền giúp chữ nổi */
+        z-index: -1; /* nằm dưới nội dung */
     }
 
-    function closeNotification() {
-        const notification = document.getElementById('successNotification');
-        if (notification) {
-            notification.classList.add('hide');
-            setTimeout(() => {
-                notification.remove();
-            }, 500);
-        }
+    .content {
+        position: relative;
+        z-index: 1;
+        color: black; /* chữ màu trắng cho nổi trên nền tối */
     }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchForm = document.getElementById('searchForm');
-        const dateInput = document.getElementById('date');
-
-        if (searchForm) {
-            searchForm.addEventListener('submit', function (event) {
-                const departure = document.getElementById('departure').value;
-                const destination = document.getElementById('destination').value;
-
-                if (departure && destination && departure === destination) {
-                    event.preventDefault();
-                    alert('Điểm đi và Điểm đến không được trùng nhau. Vui lòng chọn lại.');
-                }
-            });
-        }
-
-        // không cho phép chọn ngày trong quá khứ
-        if (dateInput) {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-
-            const minDate = `${year}-${month}-${day}`;
-
-            dateInput.min = minDate;
-
-            if (dateInput.value && dateInput.value < minDate) {
-                dateInput.value = minDate;
-            }
-        }
-    });
-</script>
-
+</style>
 </body>
+
 </html>
