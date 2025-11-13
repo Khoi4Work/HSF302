@@ -66,7 +66,6 @@ public class DataInitializer implements CommandLineRunner {
             System.out.println("ℹ️ Users already exist — skipping user initialization.");
             return;
         }
-
         Users admin = new Users();
         admin.setFullName("System Administrator");
         admin.setEmail("admin@skyticket.com");
@@ -76,17 +75,53 @@ public class DataInitializer implements CommandLineRunner {
         admin.setDateOfBirth(LocalDate.of(1990, 1, 1));
         admin.setRoleUser(RoleUsers.ADMIN);
 
-        Users demoUser = new Users();
-        demoUser.setFullName("Demo User");
-        demoUser.setEmail("user@skyticket.com");
-        demoUser.setPassword("123123");
-        demoUser.setPhone("0987654321");
-        demoUser.setPassportNumber("VN0000002");
-        demoUser.setDateOfBirth(LocalDate.of(1995, 5, 15));
-        demoUser.setRoleUser(RoleUsers.USER);
+// User 1
+        Users user1 = new Users();
+        user1.setFullName("Nguyen Van A");
+        user1.setEmail("a@skyticket.com");
+        user1.setPassword("123123");
+        user1.setPhone("0911111111");
+        user1.setPassportNumber("VN1000001");
+        user1.setDateOfBirth(LocalDate.of(1998, 3, 10));
+        user1.setRoleUser(RoleUsers.USER);
 
+// User 2
+        Users user2 = new Users();
+        user2.setFullName("Tran Thi B");
+        user2.setEmail("b@skyticket.com");
+        user2.setPassword("123123");
+        user2.setPhone("0922222222");
+        user2.setPassportNumber("VN1000002");
+        user2.setDateOfBirth(LocalDate.of(1999, 7, 25));
+        user2.setRoleUser(RoleUsers.USER);
+
+// User 3
+        Users user3 = new Users();
+        user3.setFullName("Le Hoang C");
+        user3.setEmail("c@skyticket.com");
+        user3.setPassword("123123");
+        user3.setPhone("0933333333");
+        user3.setPassportNumber("VN1000003");
+        user3.setDateOfBirth(LocalDate.of(2000, 11, 5));
+        user3.setRoleUser(RoleUsers.USER);
+
+// User 4
+        Users user4 = new Users();
+        user4.setFullName("Pham Minh D");
+        user4.setEmail("d@skyticket.com");
+        user4.setPassword("123123");
+        user4.setPhone("0944444444");
+        user4.setPassportNumber("VN1000004");
+        user4.setDateOfBirth(LocalDate.of(1997, 2, 20));
+        user4.setRoleUser(RoleUsers.USER);
+
+// Lưu tất cả vào DB
         iUsersService.createUser(admin);
-        iUsersService.createUser(demoUser);
+        iUsersService.createUser(user1);
+        iUsersService.createUser(user2);
+        iUsersService.createUser(user3);
+        iUsersService.createUser(user4);
+
 
         System.out.println("✅ Users initialized: 2 users created");
     }
