@@ -96,21 +96,28 @@
         <input type="text" name="passengerName" id="passengerName" th:value="${user}" placeholder="Nhập tên hành khách" required />
 
         <label for="flightSelect">Chuyến bay:</label>
-        <input type="text"
-               id="flightSelect"
-               th:value="${selectedFlight != null ? (selectedFlight.plane.planeModel + ' (' + selectedFlight.takeOff + ' - ' + selectedFlight.land + ')') : ''}"
-               readonly
-               style="background: #f0f0f0; cursor: not-allowed;">
-        <input type="hidden" name="flightId" th:value="${selectedFlight != null ? selectedFlight.flightPlaneId : ''}">
+        <select name="flightId" id="flightSelect" required>
+            <option value="">-- Chọn chuyến bay --</option>
+            <option th:each="flight : ${schedule_plane}"
+                    th:value="${flight.flightPlaneId}"
+                    th:text="${flight.plane.planeModel + ' (' + flight.takeOff + ' → ' + flight.land + ') - ' + #temporals.format(flight.takeOffTime, 'dd/MM/yyyy HH:mm')}"
+                    th:selected="${selectedFlight != null and flight.flightPlaneId == selectedFlight.flightPlaneId}"
+                    th:attr="data-price=${flight.flightSchedule.price}">
+            </option>
+        </select>
 
         <label for="seatClassSelect">Hạng ghế:</label>
-        <input type="text"
-               id="seatClassSelect"
-               th:value="${selectedFlight != null ? selectedFlight.flightSchedule.seatClass : ''}"
-               readonly
-               style="background: #f0f0f0; cursor: not-allowed;">
-        <input type="hidden" name="seatClass" th:value="${selectedFlight != null ? selectedFlight.flightSchedule.seatClass : ''}">
-
+        <select name="seatClass" id="seatClassSelect" required>
+            <option value="">-- Chọn hạng ghế --</option>
+            <option value="Economy"
+                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Economy'}">
+                Economy
+            </option>
+            <option value="Business"
+                    th:selected="${selectedFlight != null and selectedFlight.flightSchedule.seatClass == 'Business'}">
+                Business
+            </option>
+        </select>
 
         <label for="totalPrice">Tổng giá:</label>
         <input type="number" name="totalPrice" id="totalPrice"
