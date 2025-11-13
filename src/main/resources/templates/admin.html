@@ -83,8 +83,7 @@
                 <input name="page" id="page" type="hidden" th:value="1">
 
                 <button type="submit" class="btn btn-primary">🔍 Tìm chuyến bay</button>
-                <a id="link" th:href="@{/main}" class="btn btn-secondary">Tất cả chuyến bay</a>
-
+                <a id="link" th:href="@{/schedule/admin}" class="btn btn-secondary">Tất cả chuyến bay</a>
             </form>
         </div>
 
@@ -114,7 +113,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="flight : ${schedules}">
+                <tr th:each="flight : ${flights}">
                     <td th:text="${flight.plane.planeModel}">Airbus A321</td>
                     <td th:text="${flight.plane.airport.airportName}">Tân Sơn Nhất</td>
                     <td th:text="${flight.takeOff}">SGN</td>
@@ -144,7 +143,7 @@
                            onclick="return confirm('Bạn có chắc chắn muốn xóa lịch bay này?');">Delete</a>
                     </td>
                 </tr>
-                <tr th:if="${schedules == null or schedules.isEmpty()}">
+                <tr th:if="${flights == null or flights.isEmpty()}">
                     <td colspan="13">
                         <div class="empty-state">
                             <div class="empty-state-icon">📭</div>

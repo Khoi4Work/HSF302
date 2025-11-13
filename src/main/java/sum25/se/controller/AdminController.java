@@ -60,7 +60,7 @@ public class AdminController {
 
         model.addAttribute("airports", iAirportService.getAllAirports());
         List<FlightSchedule_Plane> schedules = iFlightSchedulePlaneService.findAll();
-        modelAndView.addObject("schedules", schedules);
+        modelAndView.addObject("flights", schedules);
         modelAndView.addObject("user", user);
         modelAndView.setViewName("admin");
         return modelAndView;
