@@ -144,7 +144,7 @@ public class AdminController {
                 model.addAttribute("planes", planes);
                 model.addAttribute("flightSchedules", flightSchedules);
                 model.addAttribute("schedule", schedule);
-                model.addAttribute("timeError", "⛔ Thời gian cất cánh phải trước thời gian hạ cánh!");
+                model.addAttribute("timeError", "Thời gian cất cánh phải trước thời gian hạ cánh!");
                 return "addSchedule";
             }
         }
@@ -219,7 +219,7 @@ public class AdminController {
                 model.addAttribute("planes", planes);
                 model.addAttribute("flightSchedules", flightSchedules);
                 model.addAttribute("schedule", schedule);
-                model.addAttribute("timeError", "⛔ Thời gian cất cánh phải trước thời gian hạ cánh!");
+                model.addAttribute("timeError", " Thời gian cất cánh phải trước thời gian hạ cánh!");
                 return "editSchedule";
             }
         }

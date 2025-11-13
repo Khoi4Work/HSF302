@@ -155,6 +155,7 @@
             <th>Hạng ghế</th>
             <th>Tổng giá</th>
             <th>Trạng thái</th>
+            <th>Ngày thanh toán</th>
             <th>Hành động</th>
         </tr>
         </thead>
@@ -176,6 +177,7 @@
                 </span>
                 <span th:if="${b.status == null}">N/A</span>
             </td>
+            <td th:text="${b.paymentTime != null ? #temporals.format(b.paymentTime, 'dd-MM-yyyy HH:mm:ss') : 'N/A'}"></td>
             <td>
                 <a th:if="${b.status != null and b.status.toString() == 'PENDING'}" 
                    th:href="@{'/booking/edit/' + ${b.bookingId}}"
