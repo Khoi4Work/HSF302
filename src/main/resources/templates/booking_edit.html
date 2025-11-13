@@ -187,8 +187,7 @@
             </div>
             <div class="info-row">
                 <span>Chuyến bay:</span>
-                <span th:text="${booking.schedule_plane?.plane?.planeModel ?: 'N/A'}"></span>
-            </div>
+                <span th:text="${booking.schedule_plane != null ? booking.schedule_plane.plane.planeModel : 'N/A'}"></span>            </div>
             <div class="info-row">
                 <span>Hạng ghế:</span>
                 <span th:text="${booking.seatClass ?: 'N/A'}"></span>

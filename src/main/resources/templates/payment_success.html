@@ -105,8 +105,9 @@
             <span th:text="${booking.passengerInfos != null && !booking.passengerInfos.isEmpty() ? booking.passengerInfos[0].fullName : 'N/A'}"></span>
         </p>
         <p><strong>Chuyến bay:</strong>
-            <span th:text="${booking.plane?.planeModel ?: 'N/A'}"></span>
+            <span th:text="${booking.schedule_plane != null ? booking.schedule_plane.plane.planeModel : 'N/A'}"></span>
         </p>
+
         <p><strong>Hạng ghế:</strong>
             <span th:text="${booking.seatClass ?: 'N/A'}"></span>
         </p>

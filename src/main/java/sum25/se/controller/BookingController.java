@@ -11,6 +11,7 @@ import sum25.se.entity.*;
 import sum25.se.service.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -393,6 +394,7 @@ public class BookingController {
                 if (booking != null) {
 
                     booking.setStatus(StatusBooking.COMPLETED);
+                    booking.setPaymentTime(LocalDateTime.now());
                     iBookingService.updateBooking(bookingId, booking);
 
                     System.out.println("✅ Booking status updated to COMPLETED");

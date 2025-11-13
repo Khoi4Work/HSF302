@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,10 +20,11 @@ public class Booking {
     Integer bookingId;
     String bookingDate;
     @Enumerated(EnumType.STRING)
-    StatusBooking status =StatusBooking.PENDING;
+    StatusBooking status = StatusBooking.PENDING;
     int totalPrice;
     String seatClass;
-
+    @Column(name = "payment_time")
+    private LocalDateTime paymentTime;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId")
@@ -34,5 +36,7 @@ public class Booking {
     @OneToOne
     @JoinColumn(name = "schedule_plane")
     FlightSchedule_Plane schedule_plane;
+
+
 
 }
